@@ -1,0 +1,20 @@
+{
+  "generator-lib-java": {
+    "githubUser": "j-fischer",
+    "authorName": "Johannes Fischer",
+    "authorEmail": "jh-fischer@web.de",
+    "libName": "rest-on-fire",
+    "libGroup": "org.restonfire",
+    "libPackage": "org.restonfire",
+    "libVersion": "0.1.0",
+    "libDesc": "Firebase REST API wrapper for Java",
+    "targetJava": "1.7",
+    "libTags": "firebase,rest,api,wrapper",
+    "bintrayUser": "j-fischer",
+    "bintrayRepo": "rest-on-fire",
+    "bintraySignFiles": true,
+    "mavenCentralSync": true,
+    "enableQualityChecks": true,
+    "usedGeneratorVersion": "2.0.0"
+  }
+}
