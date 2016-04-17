@@ -5,8 +5,8 @@ import com.ning.http.client.AsyncHttpClient;
 /**
  * Created by jfischer on 2016-04-14.
  */
-public final class RequestExecutorUtil {
-  private RequestExecutorUtil() {
+public final class RequestBuilderUtil {
+  private RequestBuilderUtil() {
     //do nothing
   }
 
@@ -25,5 +25,16 @@ public final class RequestExecutorUtil {
     return asyncHttpClient.
       preparePatch(referenceUrl).
       setBody(body);
+  }
+
+  public static AsyncHttpClient.BoundRequestBuilder createPut(AsyncHttpClient asyncHttpClient, String referenceUrl, String body) {
+    return asyncHttpClient.
+      preparePut(referenceUrl).
+      setBody(body);
+  }
+
+  public static AsyncHttpClient.BoundRequestBuilder createDelete(AsyncHttpClient asyncHttpClient, String referenceUrl) {
+    return asyncHttpClient.
+      prepareDelete(referenceUrl);
   }
 }

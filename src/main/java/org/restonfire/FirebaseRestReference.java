@@ -4,21 +4,19 @@ package org.restonfire;
 import org.jdeferred.Promise;
 import org.restonfire.exceptions.FirebaseRuntimeException;
 
-import java.util.concurrent.Future;
-
 /**
  * Created by jfischer on 2016-04-07.
  */
 public interface FirebaseRestReference {
 
   <T> Promise<T, FirebaseRuntimeException, Void> getValue(Class<T> clazz);
-  <T> void setValue(T value);
-  <T> void updateValue(T value);
-  <T> void removeValue(T value);
-  Future<FirebaseRestReference> push();
+  <T> Promise<T, FirebaseRuntimeException, Void> setValue(T value);
+  <T> Promise updateValue(T value);
+  <T> Promise<Void, FirebaseRuntimeException, Void> removeValue();
+  Promise<FirebaseRestReference, FirebaseRuntimeException, Void> push();
 
-  FirebaseRestReference root();
-  FirebaseRestReference parent();
+  FirebaseRestReference getRoot();
+  FirebaseRestReference getParent();
   FirebaseRestReference child(String path);
 
   // TODO: Add query functions limitToFirst, limitToLast, startAt, endAt, equalTo
