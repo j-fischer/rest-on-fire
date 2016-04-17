@@ -4,6 +4,8 @@ import org.restonfire.FirebaseRestFactory;
 import org.restonfire.FirebaseRestReference;
 
 /**
+ * {@link FirebaseRestFactory} implementation.
+ *
  * Created by jfischer on 2016-04-07.
  */
 public class FirebaseRequestFactory implements FirebaseRestFactory {
@@ -12,8 +14,6 @@ public class FirebaseRequestFactory implements FirebaseRestFactory {
   public static FirebaseRequestFactory getInstance() {
     return ourInstance;
   }
-
-  private boolean isDebugModeEnabled = false;
 
   private FirebaseRequestFactory() {
     // do nothing
