@@ -1,6 +1,8 @@
 package org.restonfire.utils;
 
 /**
+ * Utility class for path operations.
+ *
  * Created by jfischer on 2016-04-14.
  */
 public final class PathUtil {
@@ -9,16 +11,38 @@ public final class PathUtil {
   }
 
   public static String getParent(String path) {
-    if (path.endsWith("/"))
-      return path.substring(0, path.lastIndexOf('/', path.length() - 2));
-    else
-      return path.substring(0, path.lastIndexOf('/'));
+    if (path == null) {
+      throw new IllegalArgumentException("path cannot be null");
+    }
+
+    String normalizedPath = normalizePath(path);
+
+    if (normalizedPath.length() == 0) {
+      // root location
+      return null;
+    }
+
+    int index = normalizedPath.lastIndexOf('/');
+    return index > 0 ?
+      path.substring(0, index) :
+      "";
   }
 
   public static String getChild(String path, String child) {
-    if (path.endsWith("/"))
-      return path + child;
-    else
-      return path + "/" + child;
+    if (path == null) {
+      throw new IllegalArgumentException("path cannot be null");
+    }
+
+    String normalizedPath = normalizePath(path);
+
+    return normalizedPath.length() > 0 ?
+      normalizedPath + "/" + normalizePath(child) :
+      normalizePath(child);
+  }
+
+  private static String normalizePath(String path) {
+    return path.endsWith("/") ?
+        path.substring(0, path.length() - 1) :
+        path;
   }
 }
