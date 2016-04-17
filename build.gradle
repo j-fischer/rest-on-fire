@@ -1,4 +1,5 @@
 plugins {
+    id 'idea'
     id 'groovy'
     id 'jacoco'
     id 'project-report'
@@ -27,13 +28,16 @@ dependencies {
     provided 'com.google.code.findbugs:annotations:3.0.1'
 
     compile 'org.slf4j:slf4j-api:1.7.13'
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.ning:async-http-client:1.9.38'
+    compile 'org.jdeferred:jdeferred-core:1.2.4'
 
     testCompile 'ch.qos.logback:logback-classic:1.1.3'
     testCompile 'org.slf4j:jul-to-slf4j:1.7.13'
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
 }
 
-group = 'org.restonfire'
+group = 'org.jrfire'
 description = 'Firebase REST API wrapper for Java'
 
 github {
@@ -58,7 +62,7 @@ bintray {
     dryRun = false
     publish = true
     pkg {
-        repo = 'rest-on-fire'
+        repo = 'jr-fire'
         name = project.name
         desc = project.description
         labels = ['firebase', 'rest', 'api', 'wrapper']
