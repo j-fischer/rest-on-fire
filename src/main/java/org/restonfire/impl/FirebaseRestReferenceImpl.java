@@ -103,7 +103,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
     LOG.debug("updateValue({}) invoked for reference {}", value, referenceUrl);
     final Deferred deferred = new DeferredObject();
 
-    AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createPut(asyncHttpClient, referenceUrl, gson.toJson(value));
+    AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createPatch(asyncHttpClient, referenceUrl, gson.toJson(value));
 
     AsyncCompletionHandler<Void> handler = new AsyncCompletionHandler<Void>() {
 
