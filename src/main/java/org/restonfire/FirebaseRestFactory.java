@@ -5,8 +5,6 @@ package org.restonfire;
  */
 public interface FirebaseRestFactory {
 
-  void enableDebugMode();
-
   FirebaseRestReference getReference(String path);
 
   // TODO: Add FirebaseSecurityRulesReference getSecurityRules();

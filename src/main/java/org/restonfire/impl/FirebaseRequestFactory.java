@@ -19,12 +19,6 @@ public class FirebaseRequestFactory implements FirebaseRestFactory {
     // do nothing
   }
 
-
-  @Override
-  public void enableDebugMode() {
-    isDebugModeEnabled = true;
-  }
-
   @Override
   public FirebaseRestReference getReference(String path) {
     return new FirebaseRestReferenceImpl(
