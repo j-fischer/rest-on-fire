@@ -54,7 +54,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   @Override
   public <T> Promise<T, FirebaseRuntimeException, Void> getValue(final Class<T> clazz) {
-    LOG.debug("getValue({}) invoked", clazz);
+    LOG.debug("getValue({}) invoked for reference {}", clazz, referenceUrl);
     final Deferred deferred = new DeferredObject();
 
     AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createGet(asyncHttpClient, referenceUrl);
@@ -64,6 +64,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
       @Override
       public Void onCompleted(Response response) throws Exception {
         try {
+          LOG.debug("Request for getValue({}) completed", clazz);
           T result = handleResponse(response, clazz);
           deferred.resolve(result);
         } catch (FirebaseRuntimeException ex) {
@@ -78,7 +79,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   @Override
   public <T> Promise<T, FirebaseRuntimeException, Void> setValue(final T value) {
-    LOG.debug("setValue({}) invoked", value);
+    LOG.debug("setValue({}) invoked for reference {}", value, referenceUrl);
     final Deferred deferred = new DeferredObject();
 
     AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createPut(asyncHttpClient, referenceUrl, gson.toJson(value));
@@ -87,6 +88,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
       @Override
       public Void onCompleted(Response response) throws Exception {
+        LOG.debug("Request for setValue({}) completed for reference {}", value, referenceUrl);
         return handleValueModifiedResponse(response, deferred, value);
       }
     };
@@ -98,7 +100,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   @Override
   public <T> Promise<T, FirebaseRuntimeException, Void> updateValue(final T value) {
-    LOG.debug("updateValue({}) invoked", value);
+    LOG.debug("updateValue({}) invoked for reference {}", value, referenceUrl);
     final Deferred deferred = new DeferredObject();
 
     AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createPut(asyncHttpClient, referenceUrl, gson.toJson(value));
@@ -107,6 +109,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
       @Override
       public Void onCompleted(Response response) throws Exception {
+        LOG.debug("Request for updateValue({}) completed for reference {}", value, referenceUrl);
         return handleValueModifiedResponse(response, deferred, (T) value);
       }
     };
@@ -118,6 +121,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   @Override
   public Promise<Void, FirebaseRuntimeException, Void> removeValue() {
+    LOG.debug("removeValue() invoked for reference {}", referenceUrl);
     final Deferred deferred = new DeferredObject();
 
     AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createDelete(asyncHttpClient, referenceUrl);
@@ -126,6 +130,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
       @Override
       public Void onCompleted(Response response) throws Exception {
+        LOG.debug("Request for removeValue() completed for reference {}", referenceUrl);
         return handleValueModifiedResponse(response, deferred, null);
       }
     });
@@ -135,6 +140,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   @Override
   public Promise<FirebaseRestReference, FirebaseRuntimeException, Void> push() {
+    LOG.debug("push() invoked for reference {}", referenceUrl);
     final Deferred deferred = new DeferredObject();
 
     AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createPost(asyncHttpClient, referenceUrl, "{}");
@@ -154,6 +160,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   @Override
   public FirebaseRestReference getRoot() {
+    LOG.debug("getRoot() invoked for reference {}",referenceUrl);
     return new FirebaseRestReferenceImpl(
       asyncHttpClient,
       gson,
@@ -165,6 +172,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   @Override
   public FirebaseRestReference getParent() {
+    LOG.debug("getParent() invoked for reference {}", referenceUrl);
     return new FirebaseRestReferenceImpl(
       asyncHttpClient,
       gson,
@@ -176,6 +184,7 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   @Override
   public FirebaseRestReference child(String childPath) {
+    LOG.debug("child({}) invoked for reference {}", childPath, referenceUrl);
     return new FirebaseRestReferenceImpl(
       asyncHttpClient,
       gson,
@@ -197,6 +206,9 @@ public class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   private Void handleNewReferenceCreatedResponse(Response response, Deferred deferred) throws IOException {
     try {
+      // Note: push() is currently the only function calling handleNewReferenceCreatedResponse
+      LOG.debug("Request for push() completed for reference {}", referenceUrl);
+
       PushResponse pushResponse = gson.fromJson(response.getResponseBody(), PushResponse.class);
 
       deferred.resolve(new FirebaseRestReferenceImpl(
