@@ -53,6 +53,7 @@
         <exclude name="UseConcurrentHashMap"/>
         <exclude name="DataflowAnomalyAnalysis"/>
         <exclude name="CallSuperInConstructor"/>
+        <exclude name="OnlyOneReturn"/>
     </rule>
 
     <!-- Coupling (https://pmd.github.io/pmd-5.4.0/pmd-java/rules/java/coupling.html) -->
@@ -134,6 +135,7 @@
     <!-- Optimization (https://pmd.github.io/pmd-5.4.0/pmd-java/rules/java/optimizations.html) -->
     <rule ref="rulesets/java/optimizations.xml">
         <exclude name="LocalVariableCouldBeFinal"/>
+        <exclude name="MethodArgumentCouldBeFinal"/>
     </rule>
 
     <!-- Strict Exceptions (https://pmd.github.io/pmd-5.4.0/pmd-java/rules/java/strictexception.html) -->
