@@ -8,14 +8,9 @@ import org.restonfire.FirebaseRestReference;
  *
  * Created by jfischer on 2016-04-07.
  */
-public class FirebaseRequestFactory implements FirebaseRestFactory {
-  private static FirebaseRequestFactory ourInstance = new FirebaseRequestFactory();
+public final class FirebaseRequestFactoryImpl implements FirebaseRestFactory {
 
-  public static FirebaseRequestFactory getInstance() {
-    return ourInstance;
-  }
-
-  private FirebaseRequestFactory() {
+  public FirebaseRequestFactoryImpl() {
     // do nothing
   }
 
