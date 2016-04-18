@@ -10,10 +10,6 @@ import org.restonfire.FirebaseRestReference;
  */
 public final class FirebaseRequestFactoryImpl implements FirebaseRestFactory {
 
-  public FirebaseRequestFactoryImpl() {
-    // do nothing
-  }
-
   @Override
   public FirebaseRestReference getReference(String path) {
     return new FirebaseRestReferenceImpl(
