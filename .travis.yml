@@ -1,10 +1,9 @@
 language: java
 jdk:
   - oraclejdk7
+  - oraclejdk8
 
 sudo: false
-env:
-  - TERM=dumb
 
 before_install:
   - chmod +x gradlew
