@@ -9,7 +9,7 @@ import java.io.IOException;
  *
  * Created by jfischer on 2016-04-16.
  */
-public class FirebaseRestException extends FirebaseRuntimeException {
+public final class FirebaseRestException extends FirebaseRuntimeException {
 
   public FirebaseRestException(Response response) throws IOException {
     super(String.format("The REST request to '%s' failed with the following status code: %s", response.getUri(), response.getStatusCode()));

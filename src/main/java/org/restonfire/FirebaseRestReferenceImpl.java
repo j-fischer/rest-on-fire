@@ -1,4 +1,4 @@
-package org.restonfire.impl;
+package org.restonfire;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -8,11 +8,10 @@ import com.ning.http.client.Response;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
-import org.restonfire.FirebaseRestReference;
 import org.restonfire.exceptions.FirebaseAccessException;
 import org.restonfire.exceptions.FirebaseRestException;
 import org.restonfire.exceptions.FirebaseRuntimeException;
-import org.restonfire.response.PushResponse;
+import org.restonfire.responses.PushResponse;
 import org.restonfire.utils.PathUtil;
 import org.restonfire.utils.RequestBuilderUtil;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 
 /**
- * {{@link FirebaseRestReference} implementation.
+ * {@link FirebaseRestReference} implementation.
  *
  * Created by jfischer on 2016-04-14.
  */
@@ -30,7 +29,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestReferenceImpl.class);
 
-  private static final String FAILED_TO_PARSE_RESPONSE_BODY_FOR_REQUEST = "Failed to parse response body for request: ";
+  private static final String FAILED_TO_PARSE_RESPONSE_BODY_FOR_REQUEST = "Failed to parse responses body for request: ";
 
   private final Gson gson;
   private final AsyncHttpClient asyncHttpClient;

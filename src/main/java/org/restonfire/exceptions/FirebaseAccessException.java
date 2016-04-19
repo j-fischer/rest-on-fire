@@ -10,7 +10,7 @@ import java.io.IOException;
  *
  * Created by jfischer on 2016-04-16.
  */
-public class FirebaseAccessException extends FirebaseRuntimeException {
+public final class FirebaseAccessException extends FirebaseRuntimeException {
 
   public FirebaseAccessException(Response response)  throws IOException {
     super(String.format("The access to the reference '%s' was not permitted", response.getUri()));

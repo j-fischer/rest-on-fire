@@ -67,6 +67,7 @@
         <exclude name="ConfusingTernary"/>
         <exclude name="UseLocaleWithCaseConversions"/>
         <exclude name="AbstractClassWithoutAbstractMethod"/>
+        <exclude name="FieldDeclarationsShouldBeAtStartOfClass"/>
     </rule>
     <rule ref="rulesets/java/design.xml/AvoidDeeplyNestedIfStmts">
         <properties>
