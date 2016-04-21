@@ -9,6 +9,8 @@ import org.restonfire.exceptions.FirebaseRuntimeException;
  */
 public interface FirebaseRestReference {
 
+  String getReferenceUrl();
+
   <T> Promise<T, FirebaseRuntimeException, Void> getValue(Class<T> clazz);
   <T> Promise<T, FirebaseRuntimeException, Void> setValue(T value);
   <T> Promise updateValue(T value);

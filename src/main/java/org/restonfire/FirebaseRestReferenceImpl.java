@@ -56,6 +56,11 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
   }
 
   @Override
+  public String getReferenceUrl() {
+    return referenceUrl;
+  }
+
+  @Override
   public <T> Promise<T, FirebaseRuntimeException, Void> getValue(final Class<T> clazz) {
     LOG.debug("getValue({}) invoked for reference {}", clazz, referenceUrl);
     final Deferred<T, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
