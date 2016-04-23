@@ -52,7 +52,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
     this.fbAccessToken = fbAccessToken;
     this.path = path;
 
-    this.referenceUrl = fbBaseUrl + path;
+    this.referenceUrl = PathUtil.concatenatePath(fbBaseUrl, path);
   }
 
   @Override
@@ -192,7 +192,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
       gson,
       fbBaseUrl,
       fbAccessToken,
-      PathUtil.getChild(path, childPath)
+      PathUtil.concatenatePath(path, childPath)
     );
   }
 
@@ -218,7 +218,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
         gson,
         fbBaseUrl,
         fbAccessToken,
-        PathUtil.getChild(path, pushResponse.getName())
+        PathUtil.concatenatePath(path, pushResponse.getName())
       ));
     } catch (FirebaseRuntimeException ex) {
       deferred.reject(ex);

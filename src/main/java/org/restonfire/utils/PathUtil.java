@@ -7,7 +7,8 @@ package org.restonfire.utils;
  */
 public final class PathUtil {
 
-  private static final String FORWARD_SLASH = "/";
+  public static final String FORWARD_SLASH = "/";
+
   private static final String PATH_CANNOT_BE_NULL = "path cannot be null";
 
   private PathUtil() {
@@ -32,16 +33,17 @@ public final class PathUtil {
       : "";
   }
 
-  public static String getChild(String path, String child) {
+  public static String concatenatePath(String path, String child) {
     if (path == null) {
       throw new IllegalArgumentException(PATH_CANNOT_BE_NULL);
     }
 
     final String normalizedPath = normalizePath(path);
+    final String normalizedChild = normalizePath(child);
 
     return normalizedPath.length() > 0
-      ? normalizedPath + FORWARD_SLASH + normalizePath(child)
-      : normalizePath(child);
+      ? normalizedPath + FORWARD_SLASH + normalizedChild
+      : normalizedChild;
   }
 
   private static String normalizePath(String path) {

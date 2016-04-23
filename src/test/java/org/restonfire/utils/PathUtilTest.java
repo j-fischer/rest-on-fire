@@ -64,32 +64,32 @@ public class PathUtilTest {
     exception.expect(IllegalArgumentException.class);
     exception.expectMessage("path cannot be null");
 
-    PathUtil.getChild(null, SINGLE_PATH);
+    PathUtil.concatenatePath(null, SINGLE_PATH);
   }
 
   @Test
   public void getChild_ofRootPath() throws Exception {
-    assertEquals("foo", PathUtil.getChild("", SINGLE_PATH));
+    assertEquals("foo", PathUtil.concatenatePath("", SINGLE_PATH));
   }
 
   @Test
   public void getChild_ofRootPathWithSlash() throws Exception {
-    assertEquals("foo", PathUtil.getChild("/", SINGLE_PATH));
+    assertEquals("foo", PathUtil.concatenatePath("/", SINGLE_PATH));
   }
 
   @Test
   public void getChild_ofExistingPath() throws Exception {
-    assertEquals("foo/bar/foo", PathUtil.getChild(PATH, SINGLE_PATH));
+    assertEquals("foo/bar/foo", PathUtil.concatenatePath(PATH, SINGLE_PATH));
   }
 
   @Test
   public void getChild_ofExistingPathWithSlash() throws Exception {
-    assertEquals("foo/bar/foo", PathUtil.getChild(PATH_WITH_SLASH, SINGLE_PATH));
+    assertEquals("foo/bar/foo", PathUtil.concatenatePath(PATH_WITH_SLASH, SINGLE_PATH));
   }
 
   @Test
   public void getChild_ofExistingPathWithWithMultileveChild() throws Exception {
-    assertEquals("foo/bar/foo/bar", PathUtil.getChild(PATH, PATH));
-    assertEquals("foo/bar/foo/bar", PathUtil.getChild(PATH_WITH_SLASH, PATH_WITH_SLASH));
+    assertEquals("foo/bar/foo/bar", PathUtil.concatenatePath(PATH, PATH));
+    assertEquals("foo/bar/foo/bar", PathUtil.concatenatePath(PATH_WITH_SLASH, PATH_WITH_SLASH));
   }
 }

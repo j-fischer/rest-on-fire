@@ -1,7 +1,9 @@
 package org.restonfire.testutils;
 
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
+import org.junit.After;
 
 /**
  * Helper class for unit tests using mock objects.
@@ -22,7 +24,12 @@ public abstract class AbstractMockTestCase {
     return context.mock(clazz, name);
   }
 
-  protected void assertIsSatisfied() {
+  protected void addExpectations(Expectations expectations) {
+    context.checking(expectations);
+  }
+
+  @After
+  public void assertIsSatisfied() {
     context.assertIsSatisfied();
   }
 }
