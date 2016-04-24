@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 /**
@@ -40,6 +41,7 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   private final String fbAccessToken = "fbAccessToken";
   private final String path = "foo/par";
   private final String fbReferenceUrl = fbBaseUrl + PathUtil.FORWARD_SLASH + path;
+  private final SampleData sampleData = new SampleData("foobar", 123);
 
   private final MutableObject<AsyncCompletionHandler<Void>> capturedCompletionHandler = new MutableObject<>();
 
@@ -59,25 +61,25 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   @Test
   public void testGetValue_forbidden() throws Exception {
     expectGetRequest();
-    executedFailedRequestTest(HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null);
+    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null);
   }
 
   @Test
   public void testGetValue_unsupportedStatusCode() throws Exception {
     expectGetRequest();
-    executedFailedRequestTest(HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
+    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
 
     expectGetRequest();
-    executedFailedRequestTest(HttpURLConnection.HTTP_INTERNAL_ERROR, FirebaseRestException.class, null);
+    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_INTERNAL_ERROR, FirebaseRestException.class, null);
 
     expectGetRequest();
-    executedFailedRequestTest(HttpURLConnection.HTTP_NOT_FOUND, FirebaseRestException.class, null);
+    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_NOT_FOUND, FirebaseRestException.class, null);
   }
 
   @Test
   public void testGetValue_invalidClassType() throws Exception {
     expectGetRequest();
-    executedFailedRequestTest(HttpURLConnection.HTTP_OK, FirebaseRestException.class, "{aString: 'abc', anInt: 'foo'}");
+    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_OK, FirebaseRestException.class, "{aString: 'abc', anInt: 'foo'}");
   }
 
   @Test
@@ -105,9 +107,49 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     capturedCompletionHandler.getValue().onCompleted(response);
   }
 
-  private <T extends FirebaseRuntimeException> void executedFailedRequestTest(int statusCode, final Class<T> exceptionClazz, String requestBody) throws Exception {
-    Promise<SampleData, FirebaseRuntimeException, Void> result = ref.getValue(SampleData.class);
+  @Test
+  public void testSetValue_forbidden() throws Exception {
+    expectSetRequest(null);
 
+    executedFailedRequestTest(ref.setValue((SampleData) null), HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null);
+  }
+
+  @Test
+  public void testSetValue_unsupportedStatusCode() throws Exception {
+    expectSetRequest(sampleData);
+    executedFailedRequestTest(ref.setValue(sampleData), HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
+
+    expectSetRequest(sampleData);
+    executedFailedRequestTest(ref.setValue(sampleData), HttpURLConnection.HTTP_INTERNAL_ERROR, FirebaseRestException.class, null);
+
+    expectSetRequest(sampleData);
+    executedFailedRequestTest(ref.setValue(sampleData), HttpURLConnection.HTTP_NOT_FOUND, FirebaseRestException.class, null);
+  }
+  
+  @Test
+  public void testSetValue_success() throws Exception {
+    expectSetRequest(sampleData);
+
+    Promise<SampleData, FirebaseRuntimeException, Void> result = ref.setValue(sampleData);
+
+    result.then(new DoneCallback<SampleData>() {
+      @Override
+      public void onDone(SampleData result) {
+        assertSame(sampleData, result);
+      }
+    }).fail(new FailCallback<FirebaseRuntimeException>() {
+      @Override
+      public void onFail(FirebaseRuntimeException result) {
+        fail("The promise should not have been rejected");
+      }
+    });
+
+    Response response = createResponse(fbReferenceUrl, HttpURLConnection.HTTP_OK, gson.toJson(sampleData));
+
+    capturedCompletionHandler.getValue().onCompleted(response);
+  }
+
+  private <T extends FirebaseRuntimeException> void executedFailedRequestTest(Promise<SampleData, FirebaseRuntimeException, Void> result, int statusCode, final Class<T> exceptionClazz, String requestBody) throws Exception {
     result.then(new DoneCallback<SampleData>() {
       @Override
       public void onDone(SampleData result) {
@@ -125,6 +167,14 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     capturedCompletionHandler.getValue().onCompleted(response);
 
     assertIsSatisfied();
+  }
+
+  private <T> void expectSetRequest(final T data) {
+    addExpectations(new Expectations() {{
+      oneOf(asyncHttpClient).preparePut(fbReferenceUrl); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).setBody(gson.toJson(data)); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
+    }});
   }
 
   private void expectGetRequest() {
