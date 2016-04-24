@@ -90,6 +90,20 @@ afterReleaseBuild {
     }
 }
 
+afterEvaluate {
+  checkstyle {
+    ignoreFailures = true
+  }
+
+  findbugs {
+    ignoreFailures = true
+  }
+
+  pmd {
+    ignoreFailures = true
+  }
+}
+
 test {
     testLogging {
         events "skipped", "failed", "standard_error"
