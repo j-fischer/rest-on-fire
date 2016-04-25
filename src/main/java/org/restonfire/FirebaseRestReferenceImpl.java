@@ -36,7 +36,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   private final String path;
   private final String fbBaseUrl;
-  private final String fbAccessToken;
+  private final String fbAccessToken; //FIXME: access token must be added to all requests!
   private final String referenceUrl;
 
   FirebaseRestReferenceImpl(
