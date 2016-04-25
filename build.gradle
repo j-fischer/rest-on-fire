@@ -1,16 +1,17 @@
 plugins {
-    id 'idea'
-    id 'groovy'
-    id 'jacoco'
-    id 'project-report'
-    id 'ru.vyarus.java-lib' version '1.0.1'
-    id 'ru.vyarus.github-info' version '1.0.0'
-    id 'ru.vyarus.animalsniffer' version '1.0.0'
-    id 'ru.vyarus.quality' version '1.2.0'
-    id 'com.github.kt3k.coveralls' version '2.4.0x'
-    id 'com.jfrog.bintray' version '1.5'
-    id 'net.researchgate.release' version '2.3.4'
-    id 'com.github.ben-manes.versions' version '0.11.3'
+  id 'idea'
+  id 'groovy'
+  id 'jacoco'
+  id 'project-report'
+  id 'ru.vyarus.java-lib' version '1.0.1'
+  id 'ru.vyarus.github-info' version '1.0.0'
+  id 'ru.vyarus.animalsniffer' version '1.0.0'
+  id 'ru.vyarus.quality' version '1.2.0'
+  id 'com.github.kt3k.coveralls' version '2.4.0x'
+  id 'com.jfrog.bintray' version '1.5'
+  id 'net.researchgate.release' version '2.3.4'
+  id 'com.github.ben-manes.versions' version '0.11.3'
+  id 'net.saliman.cobertura' version '2.3.1'
 }
 
 sourceCompatibility = 1.7
@@ -104,6 +105,13 @@ afterEvaluate {
   }
 }
 
+cobertura {
+  coverageFormats = ['html', 'xml']
+  coverageIgnoreTrivial = true
+  coverageIgnores = ['org.slf4j.Logger.*']
+  coverageReportDir = new File("$buildDir/reports/cobertura")
+}
+
 test {
     testLogging {
         events "skipped", "failed", "standard_error"
@@ -111,6 +119,7 @@ test {
     }
     maxHeapSize = "512m"
 }
+test.finalizedBy(project.tasks.cobertura)
 
 dependencyUpdates.revision = 'release'
 jacocoTestReport.reports.xml.enabled = true
