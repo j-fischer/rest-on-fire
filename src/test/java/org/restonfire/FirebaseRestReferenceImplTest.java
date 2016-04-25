@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.restonfire.exceptions.FirebaseAccessException;
 import org.restonfire.exceptions.FirebaseRestException;
 import org.restonfire.exceptions.FirebaseRuntimeException;
+import org.restonfire.responses.PushResponse;
 import org.restonfire.testutils.AbstractMockTestCase;
 import org.restonfire.testutils.MockObjectHelper;
 import org.restonfire.utils.PathUtil;
@@ -37,7 +38,7 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   private final Gson gson = new GsonBuilder().create();
   private final String fbBaseUrl = "https://mynamespace.firebaseio.com";
   private final String fbAccessToken = "fbAccessToken";
-  private final String path = "foo/par";
+  private final String path = "foo/bar";
   private final String fbReferenceUrl = fbBaseUrl + PathUtil.FORWARD_SLASH + path;
   private final SampleData sampleData = new SampleData("foobar", 123);
 
@@ -54,6 +55,22 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   @Test
   public void testGetReferenceUrl() {
     assertEquals(fbBaseUrl + PathUtil.FORWARD_SLASH + path, ref.getReferenceUrl());
+  }
+
+  @Test
+  public void testGetRoot() {
+    assertEquals(fbBaseUrl + PathUtil.FORWARD_SLASH, ref.getRoot().getReferenceUrl());
+  }
+
+  @Test
+  public void testGetParent() {
+    assertEquals(fbBaseUrl + PathUtil.FORWARD_SLASH + "foo", ref.getParent().getReferenceUrl());
+  }
+
+  @Test
+  public void testChild() {
+    assertEquals(fbBaseUrl + PathUtil.FORWARD_SLASH + path + PathUtil.FORWARD_SLASH + "test", ref.child("test").getReferenceUrl());
+    assertEquals(fbBaseUrl + PathUtil.FORWARD_SLASH + path + PathUtil.FORWARD_SLASH + "test/something", ref.child("test/something/").getReferenceUrl());
   }
 
   @Test
@@ -231,6 +248,52 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     capturedCompletionHandler.getValue().onCompleted(response);
   }
 
+  @Test
+  public void testPush_forbidden() throws Exception {
+    expectPushRequest();
+
+    executedFailedRequestTest(ref.push(), HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null);
+  }
+
+  @Test
+  public void testPush_unsupportedStatusCode() throws Exception {
+    expectPushRequest();
+    executedFailedRequestTest(ref.push(), HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
+
+    expectPushRequest();
+    executedFailedRequestTest(ref.push(), HttpURLConnection.HTTP_INTERNAL_ERROR, FirebaseRestException.class, null);
+
+    expectPushRequest();
+    executedFailedRequestTest(ref.push(), HttpURLConnection.HTTP_NOT_FOUND, FirebaseRestException.class, null);
+  }
+
+  @Test
+  public void testPush_success() throws Exception {
+    final PushResponse pushResponse = new PushResponse("abc");
+
+    expectPushRequest();
+
+    Promise<FirebaseRestReference, FirebaseRuntimeException, Void> result = ref.push();
+
+    result.then(new DoneCallback<FirebaseRestReference>() {
+      @Override
+      public void onDone(FirebaseRestReference result) {
+        String expectedReferenceUrl = fbReferenceUrl + PathUtil.FORWARD_SLASH + pushResponse.getName();
+        assertEquals(expectedReferenceUrl, result.getReferenceUrl());
+      }
+    }).fail(new FailCallback<FirebaseRuntimeException>() {
+      @Override
+      public void onFail(FirebaseRuntimeException result) {
+        fail("The promise should not have been rejected");
+      }
+    });
+
+    Response response = createResponse(fbReferenceUrl, HttpURLConnection.HTTP_OK, gson.toJson(pushResponse));
+
+    capturedCompletionHandler.getValue().onCompleted(response);
+  }
+
+
   private <TResult, TException extends FirebaseRuntimeException> void executedFailedRequestTest(Promise<TResult, FirebaseRuntimeException, Void> result, int statusCode, final Class<TException> exceptionClazz, String requestBody) throws Exception {
     result.then(new DoneCallback<TResult>() {
       @Override
@@ -249,6 +312,14 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     capturedCompletionHandler.getValue().onCompleted(response);
 
     assertIsSatisfied();
+  }
+
+  private void expectPushRequest() {
+    addExpectations(new Expectations() {{
+      oneOf(asyncHttpClient).preparePost(fbReferenceUrl); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).setBody("{}"); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
+    }});
   }
 
   private void expectRemoveRequest() {

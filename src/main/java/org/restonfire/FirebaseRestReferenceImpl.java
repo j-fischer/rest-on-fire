@@ -211,7 +211,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
       // Note: push() is currently the only function calling handleNewReferenceCreatedResponse
       LOG.debug("Request for push() completed for reference {}", referenceUrl);
 
-      final PushResponse pushResponse = gson.fromJson(response.getResponseBody(), PushResponse.class);
+      final PushResponse pushResponse = handleResponse(response, PushResponse.class);
 
       deferred.resolve(new FirebaseRestReferenceImpl(
         asyncHttpClient,
