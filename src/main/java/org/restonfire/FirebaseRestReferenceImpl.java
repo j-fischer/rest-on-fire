@@ -36,7 +36,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   private final String path;
   private final String fbBaseUrl;
-  private final String fbAccessToken; //FIXME: access token must be added to all requests!
+  private final String fbAccessToken;
   private final String referenceUrl;
 
   FirebaseRestReferenceImpl(
@@ -65,7 +65,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
     LOG.debug("getValue({}) invoked for reference {}", clazz, referenceUrl);
     final Deferred<T, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
 
-    final AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createGet(asyncHttpClient, referenceUrl);
+    final AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createGet(asyncHttpClient, referenceUrl, fbAccessToken);
 
     getRequest.execute(new AsyncCompletionHandler<Void>() {
 
@@ -90,7 +90,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
     LOG.debug("setValue({}) invoked for reference {}", value, referenceUrl);
     final Deferred<T, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
 
-    final AsyncHttpClient.BoundRequestBuilder putRequest = RequestBuilderUtil.createPut(asyncHttpClient, referenceUrl, gson.toJson(value));
+    final AsyncHttpClient.BoundRequestBuilder putRequest = RequestBuilderUtil.createPut(asyncHttpClient, referenceUrl, fbAccessToken, gson.toJson(value));
 
     putRequest.execute(new AsyncCompletionHandler<Void>() {
 
@@ -109,7 +109,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
     LOG.debug("updateValue({}) invoked for reference {}", value, referenceUrl);
     final Deferred<T, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
 
-    final AsyncHttpClient.BoundRequestBuilder patchRequest = RequestBuilderUtil.createPatch(asyncHttpClient, referenceUrl, gson.toJson(value));
+    final AsyncHttpClient.BoundRequestBuilder patchRequest = RequestBuilderUtil.createPatch(asyncHttpClient, referenceUrl, fbAccessToken, gson.toJson(value));
 
     patchRequest.execute(new AsyncCompletionHandler<Void>() {
 
@@ -128,7 +128,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
     LOG.debug("removeValue() invoked for reference {}", referenceUrl);
     final Deferred<Void, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
 
-    final AsyncHttpClient.BoundRequestBuilder deleteRequest = RequestBuilderUtil.createDelete(asyncHttpClient, referenceUrl);
+    final AsyncHttpClient.BoundRequestBuilder deleteRequest = RequestBuilderUtil.createDelete(asyncHttpClient, referenceUrl, fbAccessToken);
 
     deleteRequest.execute(new AsyncCompletionHandler<Void>() {
 
@@ -147,7 +147,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
     LOG.debug("push() invoked for reference {}", referenceUrl);
     final Deferred<FirebaseRestReference, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
 
-    final AsyncHttpClient.BoundRequestBuilder postRequest = RequestBuilderUtil.createPost(asyncHttpClient, referenceUrl, "{}");
+    final AsyncHttpClient.BoundRequestBuilder postRequest = RequestBuilderUtil.createPost(asyncHttpClient, referenceUrl, fbAccessToken, "{}");
 
     postRequest.execute(new AsyncCompletionHandler<Void>() {
 

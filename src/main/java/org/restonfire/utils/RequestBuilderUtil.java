@@ -10,31 +10,35 @@ public final class RequestBuilderUtil {
     //do nothing
   }
 
-  public static AsyncHttpClient.BoundRequestBuilder createGet(AsyncHttpClient asyncHttpClient, String referenceUrl) {
+  public static AsyncHttpClient.BoundRequestBuilder createGet(AsyncHttpClient asyncHttpClient, String referenceUrl, String accessToken) {
     return asyncHttpClient
-      .prepareGet(referenceUrl);
+      .prepareGet(getFullUrl(referenceUrl, accessToken));
   }
 
-  public static AsyncHttpClient.BoundRequestBuilder createPost(AsyncHttpClient asyncHttpClient, String referenceUrl, String body) {
+  public static AsyncHttpClient.BoundRequestBuilder createPost(AsyncHttpClient asyncHttpClient, String referenceUrl, String accessToken, String body) {
     return asyncHttpClient
-      .preparePost(referenceUrl)
+      .preparePost(getFullUrl(referenceUrl, accessToken))
       .setBody(body);
   }
 
-  public static AsyncHttpClient.BoundRequestBuilder createPatch(AsyncHttpClient asyncHttpClient, String referenceUrl, String body) {
+  public static AsyncHttpClient.BoundRequestBuilder createPatch(AsyncHttpClient asyncHttpClient, String referenceUrl, String accessToken, String body) {
     return asyncHttpClient
-      .preparePatch(referenceUrl)
+      .preparePatch(getFullUrl(referenceUrl, accessToken))
       .setBody(body);
   }
 
-  public static AsyncHttpClient.BoundRequestBuilder createPut(AsyncHttpClient asyncHttpClient, String referenceUrl, String body) {
+  public static AsyncHttpClient.BoundRequestBuilder createPut(AsyncHttpClient asyncHttpClient, String referenceUrl, String accessToken, String body) {
     return asyncHttpClient
-      .preparePut(referenceUrl)
+      .preparePut(getFullUrl(referenceUrl, accessToken))
       .setBody(body);
   }
 
-  public static AsyncHttpClient.BoundRequestBuilder createDelete(AsyncHttpClient asyncHttpClient, String referenceUrl) {
+  public static AsyncHttpClient.BoundRequestBuilder createDelete(AsyncHttpClient asyncHttpClient, String referenceUrl, String accessToken) {
     return asyncHttpClient
-      .prepareDelete(referenceUrl);
+      .prepareDelete(getFullUrl(referenceUrl, accessToken));
+  }
+
+  private static String getFullUrl(String referenceUrl, String accessToken) {
+    return referenceUrl + "?auth=" + accessToken;
   }
 }
