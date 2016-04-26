@@ -39,6 +39,15 @@ public class RequestBuilderUtilTest extends AbstractMockTestCase {
   }
 
   @Test
+  public void testCreateGet_emptyAccessToken() {
+    addExpectations(new Expectations() {{
+      oneOf(asyncHttpClient).prepareGet(referenceUrl); will(returnValue(requestBuilder));
+    }});
+
+    assertSame(requestBuilder, RequestBuilderUtil.createGet(asyncHttpClient, referenceUrl, ""));
+  }
+
+  @Test
   public void testCreatePost() {
     addExpectations(new Expectations() {{
       oneOf(asyncHttpClient).preparePost(referenceUrl); will(returnValue(requestBuilder));
