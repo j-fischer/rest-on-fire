@@ -22,52 +22,101 @@ public class RequestBuilderUtilTest extends AbstractMockTestCase {
   @Test
   public void testCreateGet() {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).prepareGet(getExpectedUrl()); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).prepareGet(referenceUrl); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).addQueryParam("auth", fbAccessToken); will(returnValue(requestBuilder));
     }});
 
     assertSame(requestBuilder, RequestBuilderUtil.createGet(asyncHttpClient, referenceUrl, fbAccessToken));
   }
 
   @Test
+  public void testCreateGet_noAccessToken() {
+    addExpectations(new Expectations() {{
+      oneOf(asyncHttpClient).prepareGet(referenceUrl); will(returnValue(requestBuilder));
+    }});
+
+    assertSame(requestBuilder, RequestBuilderUtil.createGet(asyncHttpClient, referenceUrl, null));
+  }
+
+  @Test
   public void testCreatePost() {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).preparePost(getExpectedUrl()); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).preparePost(referenceUrl); will(returnValue(requestBuilder));
       oneOf(requestBuilder).setBody(body); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).addQueryParam("auth", fbAccessToken); will(returnValue(requestBuilder));
     }});
 
     assertSame(requestBuilder, RequestBuilderUtil.createPost(asyncHttpClient, referenceUrl, fbAccessToken, body));
   }
 
   @Test
+  public void testCreatePost_noAccessToken() {
+    addExpectations(new Expectations() {{
+      oneOf(asyncHttpClient).preparePost(referenceUrl); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).setBody(body); will(returnValue(requestBuilder));
+    }});
+
+    assertSame(requestBuilder, RequestBuilderUtil.createPost(asyncHttpClient, referenceUrl, null, body));
+  }
+
+  @Test
   public void testCreatePatch() {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).preparePatch(getExpectedUrl()); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).preparePatch(referenceUrl); will(returnValue(requestBuilder));
       oneOf(requestBuilder).setBody(body); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).addQueryParam("auth", fbAccessToken); will(returnValue(requestBuilder));
     }});
 
     assertSame(requestBuilder, RequestBuilderUtil.createPatch(asyncHttpClient, referenceUrl, fbAccessToken, body));
   }
 
   @Test
+  public void testCreatePatch_noAccessToken() {
+    addExpectations(new Expectations() {{
+      oneOf(asyncHttpClient).preparePatch(referenceUrl); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).setBody(body); will(returnValue(requestBuilder));
+    }});
+
+    assertSame(requestBuilder, RequestBuilderUtil.createPatch(asyncHttpClient, referenceUrl, null, body));
+  }
+
+  @Test
   public void testCreatePut() {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).preparePut(getExpectedUrl()); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).preparePut(referenceUrl); will(returnValue(requestBuilder));
       oneOf(requestBuilder).setBody(body); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).addQueryParam("auth", fbAccessToken); will(returnValue(requestBuilder));
     }});
 
     assertSame(requestBuilder, RequestBuilderUtil.createPut(asyncHttpClient, referenceUrl, fbAccessToken, body));
   }
 
   @Test
+  public void testCreatePut_noAccessToken() {
+    addExpectations(new Expectations() {{
+      oneOf(asyncHttpClient).preparePut(referenceUrl); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).setBody(body); will(returnValue(requestBuilder));
+    }});
+
+    assertSame(requestBuilder, RequestBuilderUtil.createPut(asyncHttpClient, referenceUrl, null, body));
+  }
+
+  @Test
   public void testCreateDelete() {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).prepareDelete(getExpectedUrl()); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).prepareDelete(referenceUrl); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).addQueryParam("auth", fbAccessToken); will(returnValue(requestBuilder));
     }});
 
     assertSame(requestBuilder, RequestBuilderUtil.createDelete(asyncHttpClient, referenceUrl, fbAccessToken));
   }
 
-  private String getExpectedUrl() {
-    return referenceUrl + "?auth=" + fbAccessToken;
+  @Test
+  public void testCreateDelete_noAccessToken() {
+    addExpectations(new Expectations() {{
+      oneOf(asyncHttpClient).prepareDelete(referenceUrl); will(returnValue(requestBuilder));
+    }});
+
+    assertSame(requestBuilder, RequestBuilderUtil.createDelete(asyncHttpClient, referenceUrl, null));
   }
 }

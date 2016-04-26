@@ -11,34 +11,52 @@ public final class RequestBuilderUtil {
   }
 
   public static AsyncHttpClient.BoundRequestBuilder createGet(AsyncHttpClient asyncHttpClient, String referenceUrl, String accessToken) {
-    return asyncHttpClient
-      .prepareGet(getFullUrl(referenceUrl, accessToken));
+    final AsyncHttpClient.BoundRequestBuilder requestBuilder = asyncHttpClient
+      .prepareGet(referenceUrl);
+
+    return addQueryParamsIfApplicable(requestBuilder, accessToken);
   }
 
   public static AsyncHttpClient.BoundRequestBuilder createPost(AsyncHttpClient asyncHttpClient, String referenceUrl, String accessToken, String body) {
-    return asyncHttpClient
-      .preparePost(getFullUrl(referenceUrl, accessToken))
+    final AsyncHttpClient.BoundRequestBuilder requestBuilder = asyncHttpClient
+      .preparePost(referenceUrl)
       .setBody(body);
+
+    return addQueryParamsIfApplicable(requestBuilder, accessToken);
   }
 
   public static AsyncHttpClient.BoundRequestBuilder createPatch(AsyncHttpClient asyncHttpClient, String referenceUrl, String accessToken, String body) {
-    return asyncHttpClient
-      .preparePatch(getFullUrl(referenceUrl, accessToken))
+    final AsyncHttpClient.BoundRequestBuilder requestBuilder = asyncHttpClient
+      .preparePatch(referenceUrl)
       .setBody(body);
+
+    return addQueryParamsIfApplicable(requestBuilder, accessToken);
   }
 
   public static AsyncHttpClient.BoundRequestBuilder createPut(AsyncHttpClient asyncHttpClient, String referenceUrl, String accessToken, String body) {
-    return asyncHttpClient
-      .preparePut(getFullUrl(referenceUrl, accessToken))
+    final AsyncHttpClient.BoundRequestBuilder requestBuilder = asyncHttpClient
+      .preparePut(referenceUrl)
       .setBody(body);
+
+    return addQueryParamsIfApplicable(requestBuilder, accessToken);
   }
 
   public static AsyncHttpClient.BoundRequestBuilder createDelete(AsyncHttpClient asyncHttpClient, String referenceUrl, String accessToken) {
-    return asyncHttpClient
-      .prepareDelete(getFullUrl(referenceUrl, accessToken));
+    final AsyncHttpClient.BoundRequestBuilder requestBuilder = asyncHttpClient
+      .prepareDelete(referenceUrl);
+
+    return addQueryParamsIfApplicable(requestBuilder, accessToken);
   }
 
-  private static String getFullUrl(String referenceUrl, String accessToken) {
-    return referenceUrl + "?auth=" + accessToken;
+  private static AsyncHttpClient.BoundRequestBuilder addQueryParamsIfApplicable(AsyncHttpClient.BoundRequestBuilder requestBuilder, String accessToken) {
+    if (notNullOrEmpty(accessToken)) {
+      return requestBuilder.addQueryParam("auth", accessToken);
+    }
+
+    return requestBuilder;
+  }
+
+  private static boolean notNullOrEmpty(String aString) {
+    return aString != null && aString.length() > 0;
   }
 }

@@ -37,7 +37,6 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 
   private final Gson gson = new GsonBuilder().create();
   private final String fbBaseUrl = "https://mynamespace.firebaseio.com";
-  private final String fbAccessToken = "fbAccessToken";
   private final String path = "foo/bar";
   private final String fbReferenceUrl = fbBaseUrl + PathUtil.FORWARD_SLASH + path;
   private final SampleData sampleData = new SampleData("foobar", 123);
@@ -48,7 +47,7 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     asyncHttpClient,
     gson,
     fbBaseUrl,
-    fbAccessToken,
+    null, 
     path
   );
 
@@ -99,27 +98,25 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 
   @Test
   public void testGetValue_success() throws Exception {
-    final SampleData expectedSampleData = new SampleData("aValue", 123);
+    executeSuccessfulGetValueRequest(ref);
+  }
 
-    expectGetRequest();
+  @Test
+  public void testGetValue_success_withAccessToken() throws Exception {
+    final String fbAccessToken = "fbAccessToken";
+    final FirebaseRestReferenceImpl refWithToken = new FirebaseRestReferenceImpl(
+      asyncHttpClient,
+      gson,
+      fbBaseUrl,
+      fbAccessToken,
+      path
+    );
 
-    Promise<SampleData, FirebaseRuntimeException, Void> result = ref.getValue(SampleData.class);
+    addExpectations(new Expectations() {{
+      oneOf(requestBuilder).addQueryParam("auth", fbAccessToken); will(returnValue(requestBuilder));
+    }});
 
-    result.then(new DoneCallback<SampleData>() {
-      @Override
-      public void onDone(SampleData result) {
-        assertEquals(expectedSampleData, result);
-      }
-    }).fail(new FailCallback<FirebaseRuntimeException>() {
-      @Override
-      public void onFail(FirebaseRuntimeException result) {
-        fail("The promise should not have been rejected");
-      }
-    });
-
-    Response response = createResponse(fbReferenceUrl, HttpURLConnection.HTTP_OK, gson.toJson(expectedSampleData));
-
-    capturedCompletionHandler.getValue().onCompleted(response);
+    executeSuccessfulGetValueRequest(refWithToken);
   }
 
   @Test
@@ -293,6 +290,29 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     capturedCompletionHandler.getValue().onCompleted(response);
   }
 
+  private void executeSuccessfulGetValueRequest(FirebaseRestReferenceImpl restReference) throws Exception {
+    final SampleData expectedSampleData = new SampleData("aValue", 123);
+
+    expectGetRequest();
+
+    Promise<SampleData, FirebaseRuntimeException, Void> result = restReference.getValue(SampleData.class);
+
+    result.then(new DoneCallback<SampleData>() {
+      @Override
+      public void onDone(SampleData result) {
+        assertEquals(expectedSampleData, result);
+      }
+    }).fail(new FailCallback<FirebaseRuntimeException>() {
+      @Override
+      public void onFail(FirebaseRuntimeException result) {
+        fail("The promise should not have been rejected");
+      }
+    });
+
+    Response response = createResponse(fbReferenceUrl, HttpURLConnection.HTTP_OK, gson.toJson(expectedSampleData));
+
+    capturedCompletionHandler.getValue().onCompleted(response);
+  }
 
   private <TResult, TException extends FirebaseRuntimeException> void executedFailedRequestTest(Promise<TResult, FirebaseRuntimeException, Void> result, int statusCode, final Class<TException> exceptionClazz, String requestBody) throws Exception {
     result.then(new DoneCallback<TResult>() {
@@ -316,7 +336,7 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 
   private void expectPushRequest() {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).preparePost(getExpectedUrl()); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).preparePost(fbReferenceUrl); will(returnValue(requestBuilder));
       oneOf(requestBuilder).setBody("{}"); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
@@ -324,14 +344,14 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 
   private void expectRemoveRequest() {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).prepareDelete(getExpectedUrl()); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).prepareDelete(fbReferenceUrl); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
   }
 
   private <T> void expectUpdateRequest(final T data) {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).preparePatch(getExpectedUrl()); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).preparePatch(fbReferenceUrl); will(returnValue(requestBuilder));
       oneOf(requestBuilder).setBody(gson.toJson(data)); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
@@ -339,7 +359,7 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 
   private <T> void expectSetRequest(final T data) {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).preparePut(getExpectedUrl()); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).preparePut(fbReferenceUrl); will(returnValue(requestBuilder));
       oneOf(requestBuilder).setBody(gson.toJson(data)); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
@@ -347,7 +367,7 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 
   private void expectGetRequest() {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).prepareGet(getExpectedUrl()); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).prepareGet(fbReferenceUrl); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
   }
@@ -361,10 +381,6 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     }});
 
     return response;
-  }
-
-  private String getExpectedUrl() {
-    return fbReferenceUrl + "?auth=" + fbAccessToken;
   }
 
   public static class SampleData {
