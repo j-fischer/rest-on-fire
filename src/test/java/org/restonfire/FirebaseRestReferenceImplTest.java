@@ -47,7 +47,7 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     asyncHttpClient,
     gson,
     fbBaseUrl,
-    null, 
+    null,
     path
   );
 
