@@ -5,13 +5,17 @@
 
 ### About
 
-Firebase REST API wrapper for Java
+This library is a wrapper for Firebase's REST API written in Java.
+
+More info to come soon.
 
 Features:
 * Feature 1
 * Feature 2
 
 ### Setup
+
+NOTE: The initial release as not yet been published yet!!!
 
 Releases are published to [bintray jcenter](https://bintray.com/bintray/jcenter) (package appear immediately after release) 
 and then to maven central (require few days after release to be published). 
@@ -46,6 +50,8 @@ You can use snapshot versions through [JitPack](https://jitpack.io):
 * Follow displayed instruction: add repository and change dependency (NOTE: due to JitPack convention artifact group will be different)
 
 ### Usage
+
+More info to come soon.
 
 -
 [![java lib generator](http://img.shields.io/badge/Powered%20by-%20Java%20lib%20generator-green.svg?style=flat-square)](https://github.com/xvik/generator-lib-java)
