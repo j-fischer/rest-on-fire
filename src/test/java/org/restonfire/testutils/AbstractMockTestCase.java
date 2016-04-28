@@ -7,8 +7,6 @@ import org.junit.After;
 
 /**
  * Helper class for unit tests using mock objects.
- *
- * Created by jfischer on 2016-04-20.
  */
 public abstract class AbstractMockTestCase {
 

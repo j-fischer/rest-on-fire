@@ -8,7 +8,7 @@ import org.restonfire.testutils.AbstractMockTestCase;
 import static org.junit.Assert.assertSame;
 
 /**
- * Created by jfischer on 2016-04-24.
+ * Test class for RequestBuilderUtil.
  */
 public class RequestBuilderUtilTest extends AbstractMockTestCase {
 

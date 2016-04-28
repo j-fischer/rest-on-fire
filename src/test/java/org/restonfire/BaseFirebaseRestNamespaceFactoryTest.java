@@ -10,7 +10,7 @@ import org.restonfire.utils.PathUtil;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by jfischer on 2016-04-24.
+ * Test class for BaseFirebaseRestNamespaceFactory.
  */
 public class BaseFirebaseRestNamespaceFactoryTest extends AbstractMockTestCase {
 

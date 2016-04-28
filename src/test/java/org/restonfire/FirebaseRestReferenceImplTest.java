@@ -27,8 +27,6 @@ import static org.junit.Assert.*;
 
 /**
  * Test class for FirebaseRestReferenceImpl.
- *
- * Created by jfischer on 2016-04-20.
  */
 public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 

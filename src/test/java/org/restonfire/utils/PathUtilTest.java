@@ -7,9 +7,7 @@ import org.junit.rules.ExpectedException;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Unit test for PathUtil
- *
- * Created by jfischer on 2016-04-16.
+ * Test class for PathUtil.
  */
 public class PathUtilTest {
 

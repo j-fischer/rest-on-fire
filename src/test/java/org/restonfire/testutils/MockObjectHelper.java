@@ -10,8 +10,6 @@ import java.util.concurrent.Callable;
 
 /**
  * Helper functions to enhance the behavior of mock objects.
- *
- * Created by jfischer on 2016-04-23.
  */
 public class MockObjectHelper
 {
