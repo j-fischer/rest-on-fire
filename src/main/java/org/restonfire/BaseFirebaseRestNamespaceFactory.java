@@ -4,19 +4,19 @@ import com.google.gson.Gson;
 import com.ning.http.client.AsyncHttpClient;
 
 /**
- * {@link FirebaseRestReferenceFactory} implementation.
+ * {@link FirebaseRestNamespace} implementation.
  *
  * Created by jfischer on 2016-04-07.
  */
-public final class BaseFirebaseNamespaceFactory implements FirebaseRestReferenceFactory {
+public final class BaseFirebaseRestNamespaceFactory implements FirebaseRestNamespace {
 
-  public static FirebaseRestReferenceFactory create(
+  public static FirebaseRestNamespace create(
     AsyncHttpClient asyncHttpClient,
     Gson gson,
     String namespaceUrl,
     String firebaseAccessToken) {
 
-    return new BaseFirebaseNamespaceFactory(asyncHttpClient, gson, namespaceUrl, firebaseAccessToken);
+    return new BaseFirebaseRestNamespaceFactory(asyncHttpClient, gson, namespaceUrl, firebaseAccessToken);
   }
 
   private final AsyncHttpClient asyncHttpClient;
@@ -24,7 +24,7 @@ public final class BaseFirebaseNamespaceFactory implements FirebaseRestReference
   private final String namespaceUrl;
   private final String firebaseAccessToken;
 
-  private BaseFirebaseNamespaceFactory(
+  private BaseFirebaseRestNamespaceFactory(
     AsyncHttpClient asyncHttpClient,
     Gson gson,
     String namespaceUrl,

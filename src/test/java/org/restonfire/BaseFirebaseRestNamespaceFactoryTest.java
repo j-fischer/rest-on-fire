@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by jfischer on 2016-04-24.
  */
-public class BaseFirebaseNamespaceFactoryTest extends AbstractMockTestCase {
+public class BaseFirebaseRestNamespaceFactoryTest extends AbstractMockTestCase {
 
   private final AsyncHttpClient asyncHttpClient = mock(AsyncHttpClient.class);
 
@@ -22,7 +22,7 @@ public class BaseFirebaseNamespaceFactoryTest extends AbstractMockTestCase {
   private final String fbBaseUrl = "https://mynamespace.firebaseio.com";
   private final String fbAccessToken = "someAccessToken";
 
-  private final FirebaseRestReferenceFactory factory = BaseFirebaseNamespaceFactory.create(asyncHttpClient, gson, fbBaseUrl, fbAccessToken);
+  private final FirebaseRestNamespace factory = BaseFirebaseRestNamespaceFactory.create(asyncHttpClient, gson, fbBaseUrl, fbAccessToken);
 
   @Test
   public void testGetReference() {
