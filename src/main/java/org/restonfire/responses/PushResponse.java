@@ -1,9 +1,7 @@
 package org.restonfire.responses;
 
 /**
- * * Simple Pojo for serialization/deseriazation of the Firebase push responses for REST requests.
- *
- * Created by jfischer on 2016-04-14.
+ * Simple Pojo for serialization/deseriazation of the Firebase push responses for REST requests.
  */
 public final class PushResponse {
   private final String name;

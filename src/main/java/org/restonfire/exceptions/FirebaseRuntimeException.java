@@ -8,8 +8,6 @@ package org.restonfire.exceptions;
  * This exception is abstract and cannot be instantiated.
  * There should always be a more specific exception that
  * should be used when throwing an error.
- *
- * Created by jfischer on 2016-04-16.
  */
 public abstract class FirebaseRuntimeException extends RuntimeException {
 

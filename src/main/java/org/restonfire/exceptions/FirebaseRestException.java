@@ -6,8 +6,6 @@ import java.io.IOException;
 
 /**
  * A request to Firebase's REST API failed with an unexpected status code.
- *
- * Created by jfischer on 2016-04-16.
  */
 public final class FirebaseRestException extends FirebaseRuntimeException {
 

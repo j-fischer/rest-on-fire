@@ -7,8 +7,6 @@ import java.io.IOException;
 /**
  * Exception thrown if the operation on a Firebase reference was not permitted
  * under the current security rules.
- *
- * Created by jfischer on 2016-04-16.
  */
 public final class FirebaseAccessException extends FirebaseRuntimeException {
 

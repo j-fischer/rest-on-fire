@@ -22,8 +22,6 @@ import java.net.HttpURLConnection;
 
 /**
  * {@link FirebaseRestReference} implementation.
- *
- * Created by jfischer on 2016-04-14.
  */
 final class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
