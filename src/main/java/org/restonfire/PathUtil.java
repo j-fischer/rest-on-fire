@@ -1,11 +1,11 @@
-package org.restonfire.utils;
+package org.restonfire;
 
 /**
  * Utility class for path operations.
  *
  * Created by jfischer on 2016-04-14.
  */
-public final class PathUtil {
+final class PathUtil {
 
   public static final String FORWARD_SLASH = "/";
 

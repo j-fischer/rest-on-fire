@@ -2,7 +2,6 @@ package org.restonfire;
 
 import com.google.gson.Gson;
 import com.ning.http.client.AsyncHttpClient;
-import org.restonfire.utils.PathUtil;
 
 /**
  * {@link FirebaseRestNamespace} implementation using {@link AsyncHttpClient} as the HTTP

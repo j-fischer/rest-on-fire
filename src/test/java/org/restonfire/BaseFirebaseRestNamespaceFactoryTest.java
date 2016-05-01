@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.ning.http.client.AsyncHttpClient;
 import org.junit.Test;
 import org.restonfire.testutils.AbstractMockTestCase;
-import org.restonfire.utils.PathUtil;
 
 import static org.junit.Assert.assertEquals;
 

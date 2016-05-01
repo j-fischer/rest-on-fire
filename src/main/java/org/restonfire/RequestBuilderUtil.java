@@ -1,11 +1,11 @@
-package org.restonfire.utils;
+package org.restonfire;
 
 import com.ning.http.client.AsyncHttpClient;
 
 /**
  * Utility class to build the requests to Firebase.
  */
-public final class RequestBuilderUtil {
+final class RequestBuilderUtil {
   private RequestBuilderUtil() {
     //do nothing
   }

@@ -12,8 +12,6 @@ import org.restonfire.exceptions.FirebaseAccessException;
 import org.restonfire.exceptions.FirebaseRestException;
 import org.restonfire.exceptions.FirebaseRuntimeException;
 import org.restonfire.responses.PushResponse;
-import org.restonfire.utils.PathUtil;
-import org.restonfire.utils.RequestBuilderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

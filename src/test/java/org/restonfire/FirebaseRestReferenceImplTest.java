@@ -18,7 +18,6 @@ import org.restonfire.exceptions.FirebaseRuntimeException;
 import org.restonfire.responses.PushResponse;
 import org.restonfire.testutils.AbstractMockTestCase;
 import org.restonfire.testutils.MockObjectHelper;
-import org.restonfire.utils.PathUtil;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

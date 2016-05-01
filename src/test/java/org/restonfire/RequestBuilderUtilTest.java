@@ -1,8 +1,9 @@
-package org.restonfire.utils;
+package org.restonfire;
 
 import com.ning.http.client.AsyncHttpClient;
 import org.jmock.Expectations;
 import org.junit.Test;
+import org.restonfire.RequestBuilderUtil;
 import org.restonfire.testutils.AbstractMockTestCase;
 
 import static org.junit.Assert.assertSame;
