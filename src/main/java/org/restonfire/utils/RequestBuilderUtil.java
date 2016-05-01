@@ -3,7 +3,7 @@ package org.restonfire.utils;
 import com.ning.http.client.AsyncHttpClient;
 
 /**
- * Created by jfischer on 2016-04-14.
+ * Utility class to build the requests to Firebase.
  */
 public final class RequestBuilderUtil {
   private RequestBuilderUtil() {

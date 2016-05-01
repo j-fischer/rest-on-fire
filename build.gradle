@@ -22,22 +22,42 @@ wrapper {
 }
 
 repositories { jcenter(); mavenCentral(); mavenLocal() }
+
+
+sourceSets {
+  integrationTest {
+    groovy {
+      compileClasspath += main.output
+      runtimeClasspath += main.output
+      srcDir file('src/integration-test/groovy')
+    }
+    resources.srcDir file('src/integration-test/resources')
+  }
+}
+
+configurations {
+  integrationTestCompile.extendsFrom testCompile
+  integrationTestRuntime.extendsFrom testRuntime
+}
+
 dependencies {
-    signature 'org.codehaus.mojo.signature:java17:+@signature'
+  signature 'org.codehaus.mojo.signature:java17:+@signature'
 
-    provided 'com.google.code.findbugs:jsr305:3.0.1'
-    provided 'com.google.code.findbugs:annotations:3.0.1'
+  provided 'com.google.code.findbugs:jsr305:3.0.1'
+  provided 'com.google.code.findbugs:annotations:3.0.1'
 
-    compile 'org.slf4j:slf4j-api:1.7.13'
-    compile 'com.google.code.gson:gson:2.6.2'
-    compile 'com.ning:async-http-client:1.9.38'
-    compile 'org.jdeferred:jdeferred-core:1.2.4'
+  compile 'org.slf4j:slf4j-api:1.7.13'
+  compile 'com.google.code.gson:gson:2.6.2'
+  compile 'com.ning:async-http-client:1.9.38'
+  compile 'org.jdeferred:jdeferred-core:1.2.4'
 
-    testCompile 'org.apache.commons:commons-lang3:3.4'
-    testCompile 'ch.qos.logback:logback-classic:1.1.3'
-    testCompile 'org.slf4j:jul-to-slf4j:1.7.13'
-    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-    testCompile 'org.jmock:jmock-legacy:2.5.1'
+  testCompile 'org.apache.commons:commons-lang3:3.4'
+  testCompile 'ch.qos.logback:logback-classic:1.1.3'
+  testCompile 'org.slf4j:jul-to-slf4j:1.7.13'
+  testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+  testCompile 'org.jmock:jmock-legacy:2.5.1'
+
+  integrationTestCompile 'com.firebase:firebase-token-generator:2.0.0'
 }
 
 group = 'org.jrfire'
@@ -113,13 +133,31 @@ cobertura {
 }
 
 test {
-    testLogging {
-        events "skipped", "failed", "standard_error"
-        exceptionFormat "full"
-    }
-    maxHeapSize = "512m"
+  testLogging {
+      events "skipped", "failed", "standard_error"
+      exceptionFormat "full"
+  }
+  maxHeapSize = "512m"
 }
 test.finalizedBy(project.tasks.cobertura)
+
+task integrationTest(type: Test) {
+  testClassesDir = sourceSets.integrationTest.output.classesDir
+  classpath = sourceSets.integrationTest.runtimeClasspath
+
+  testLogging {
+    events "skipped", "failed", "standard_error"
+    exceptionFormat "full"
+  }
+
+  systemProperties System.properties
+
+  outputs.upToDateWhen { false }
+}
+
+tasks.withType(Test) {
+  reports.html.destination = file("${reporting.baseDir}/${name}")
+}
 
 dependencyUpdates.revision = 'release'
 jacocoTestReport.reports.xml.enabled = true

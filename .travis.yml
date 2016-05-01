@@ -12,7 +12,7 @@ install:
   - ./gradlew assemble
 
 script:
-  - ./gradlew check
+  - ./gradlew check -x integrationTest
 
 after_success:
   - ./gradlew jacocoTestReport coveralls

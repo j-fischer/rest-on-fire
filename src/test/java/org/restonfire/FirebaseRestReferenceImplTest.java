@@ -334,7 +334,7 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 
   private void expectPushRequest() {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).preparePost(fbReferenceUrl); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).preparePost(getFirebaseRestUrl()); will(returnValue(requestBuilder));
       oneOf(requestBuilder).setBody("{}"); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
@@ -342,14 +342,14 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 
   private void expectRemoveRequest() {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).prepareDelete(fbReferenceUrl); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).prepareDelete(getFirebaseRestUrl()); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
   }
 
   private <T> void expectUpdateRequest(final T data) {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).preparePatch(fbReferenceUrl); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).preparePatch(getFirebaseRestUrl()); will(returnValue(requestBuilder));
       oneOf(requestBuilder).setBody(gson.toJson(data)); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
@@ -357,7 +357,7 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 
   private <T> void expectSetRequest(final T data) {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).preparePut(fbReferenceUrl); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).preparePut(getFirebaseRestUrl()); will(returnValue(requestBuilder));
       oneOf(requestBuilder).setBody(gson.toJson(data)); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
@@ -365,7 +365,7 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 
   private void expectGetRequest() {
     addExpectations(new Expectations() {{
-      oneOf(asyncHttpClient).prepareGet(fbReferenceUrl); will(returnValue(requestBuilder));
+      oneOf(asyncHttpClient).prepareGet(getFirebaseRestUrl()); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
   }
@@ -379,6 +379,10 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     }});
 
     return response;
+  }
+
+  private String getFirebaseRestUrl() {
+    return fbReferenceUrl + FirebaseRestReferenceImpl.JSON_SUFFIX;
   }
 
   public static class SampleData {

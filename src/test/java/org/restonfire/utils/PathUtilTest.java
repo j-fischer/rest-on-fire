@@ -90,4 +90,10 @@ public class PathUtilTest {
     assertEquals("foo/bar/foo/bar", PathUtil.concatenatePath(PATH, PATH));
     assertEquals("foo/bar/foo/bar", PathUtil.concatenatePath(PATH_WITH_SLASH, PATH_WITH_SLASH));
   }
+
+  @Test
+  public void normalizePath() {
+    assertEquals(PATH, PathUtil.normalizePath(PATH));
+    assertEquals(PATH, PathUtil.normalizePath(PATH_WITH_SLASH));
+  }
 }

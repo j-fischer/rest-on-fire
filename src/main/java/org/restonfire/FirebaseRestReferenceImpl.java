@@ -27,6 +27,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestReferenceImpl.class);
 
+  protected static final String JSON_SUFFIX = ".json";
   private static final String FAILED_TO_PARSE_RESPONSE_BODY_FOR_REQUEST = "Failed to parse responses body for request: ";
 
   private final Gson gson;
@@ -50,12 +51,12 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
     this.fbAccessToken = fbAccessToken;
     this.path = path;
 
-    this.referenceUrl = PathUtil.concatenatePath(fbBaseUrl, path);
+    this.referenceUrl = PathUtil.concatenatePath(fbBaseUrl, path) + JSON_SUFFIX;
   }
 
   @Override
   public String getReferenceUrl() {
-    return referenceUrl;
+    return referenceUrl.substring(0, referenceUrl.length() - JSON_SUFFIX.length());
   }
 
   @Override

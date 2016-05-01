@@ -46,7 +46,7 @@ public final class PathUtil {
       : normalizedChild;
   }
 
-  private static String normalizePath(String path) {
+  public static String normalizePath(String path) {
     return path.endsWith(FORWARD_SLASH)
       ? path.substring(0, path.length() - 1)
       : path;
