@@ -18,7 +18,7 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 wrapper {
-    gradleVersion = 2.10
+  gradleVersion = 2.10
 }
 
 repositories { jcenter(); mavenCentral(); mavenLocal() }
@@ -64,51 +64,51 @@ group = 'org.jrfire'
 description = 'Firebase REST API wrapper for Java'
 
 github {
-    user = 'j-fischer'
-    license = 'MIT'
+  user = 'j-fischer'
+  license = 'MIT'
 }
 
 pom {
-    developers {
-        developer {
-            id "j-fischer"
-            name "Johannes Fischer"
-            email "jh-fischer@web.de"
-        }
+  developers {
+    developer {
+      id "j-fischer"
+      name "Johannes Fischer"
+      email "jh-fischer@web.de"
     }
+  }
 }
 
 bintray {
-    user = project.hasProperty('bintrayUser') ? bintrayUser : 'USER'
-    key = project.hasProperty('bintrayKey') ? bintrayKey : 'KEY'
-    publications = ['maven']
-    dryRun = false
-    publish = true
-    pkg {
-        repo = 'jr-fire'
-        name = project.name
-        desc = project.description
-        labels = ['firebase', 'rest', 'api', 'wrapper']
-        publicDownloadNumbers = true
-        version {
-            gpg {
-                sign = true
-                passphrase = project.hasProperty('gpgPassphrase') ? gpgPassphrase : ''
-            }
-            mavenCentralSync {
-                sync = false
-                user = project.hasProperty('sonatypeUser') ? sonatypeUser : 'USER'
-                password = project.hasProperty('sonatypePassword') ? sonatypePassword : 'PASSWORD'
-            }
-        }
+  user = project.hasProperty('bintrayUser') ? bintrayUser : 'USER'
+  key = project.hasProperty('bintrayKey') ? bintrayKey : 'KEY'
+  publications = ['maven']
+  dryRun = false
+  publish = true
+  pkg {
+    repo = 'jr-fire'
+    name = project.name
+    desc = project.description
+    labels = ['firebase', 'rest', 'api', 'wrapper']
+    publicDownloadNumbers = true
+    version {
+      gpg {
+        sign = true
+        passphrase = project.hasProperty('gpgPassphrase') ? gpgPassphrase : ''
+      }
+      mavenCentralSync {
+        sync = false
+        user = project.hasProperty('sonatypeUser') ? sonatypeUser : 'USER'
+        password = project.hasProperty('sonatypePassword') ? sonatypePassword : 'PASSWORD'
+      }
     }
+  }
 }
 
 afterReleaseBuild {
-    dependsOn = [bintrayUpload]
-    doLast {
-        logger.warn "RELEASED $project.group:$project.name:$project.version"
-    }
+  dependsOn = [bintrayUpload]
+  doLast {
+    logger.warn "RELEASED $project.group:$project.name:$project.version"
+  }
 }
 
 afterEvaluate {
@@ -134,8 +134,8 @@ cobertura {
 
 test {
   testLogging {
-      events "skipped", "failed", "standard_error"
-      exceptionFormat "full"
+    events "skipped", "failed", "standard_error"
+    exceptionFormat "full"
   }
   maxHeapSize = "512m"
 }
@@ -163,6 +163,6 @@ dependencyUpdates.revision = 'release'
 jacocoTestReport.reports.xml.enabled = true
 
 task showDependenciesTree(dependsOn: 'htmlDependencyReport', group: 'help', description:
-        'Generates dependencies tree report and opens it in browser') << {
-    java.awt.Desktop.getDesktop().open(file('/build/reports/project/dependencies/root.html'))
+  'Generates dependencies tree report and opens it in browser') << {
+  java.awt.Desktop.getDesktop().open(file('/build/reports/project/dependencies/root.html'))
 }
