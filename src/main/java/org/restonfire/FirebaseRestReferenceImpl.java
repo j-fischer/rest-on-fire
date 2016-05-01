@@ -25,7 +25,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
 
   private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestReferenceImpl.class);
 
-  static final String JSON_SUFFIX = ".json";
+  public static final String JSON_SUFFIX = ".json";
 
   private static final String FAILED_TO_PARSE_RESPONSE_BODY_FOR_REQUEST = "Failed to parse responses body for request: ";
 

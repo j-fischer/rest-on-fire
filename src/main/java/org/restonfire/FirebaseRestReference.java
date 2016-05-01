@@ -33,7 +33,7 @@ public interface FirebaseRestReference {
    *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that an
    *        unexpected status code was returned or the deserialization of the response into the type parameter fails.
    *   </li>
-   * <ul/>
+   * </ul>
    * @param clazz The {@link Class} type for the POJO to be created for the data returned by the request.
    * @param <T> The type of the result object.
    * @return A promise which will be resolved with the POJO generated from the response if the request was successful.
@@ -52,7 +52,7 @@ public interface FirebaseRestReference {
    *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that an
    *        unexpected status code was returned or the deserialization of the response into the type parameter fails.
    *   </li>
-   * <ul/>
+   * </ul>
    * @param value The value to be written to Firebase.
    * @param <T> The type of the parameter object.
    * @return A promise which will resolve with the object passed in as the value if the request was successful.
@@ -72,7 +72,7 @@ public interface FirebaseRestReference {
    *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that an
    *        unexpected status code was returned or the deserialization of the response into the type parameter fails.
    *   </li>
-   * <ul/>
+   * </ul>
    * @param value The value to be written to Firebase.
    * @param <T> The type of the parameter object.
    * @return A promise which will resolve with the object passed in as the value if the request was successful.
@@ -91,7 +91,7 @@ public interface FirebaseRestReference {
    *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that
    *        an unexpected status code was returned.
    *   </li>
-   * <ul/>
+   * </ul>
    * @return A promise which will be resolved with a <code>null</code> value if the request was successful.
    */
   Promise<Void, FirebaseRuntimeException, Void> removeValue();
@@ -108,7 +108,7 @@ public interface FirebaseRestReference {
    *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that
    *        an unexpected status code was returned.
    *   </li>
-   * <ul/>
+   * </ul>
    * @return The reference to the newly created child in Firebase.
    *
    * @see <a href="https://www.firebase.com/docs/android/api/#firebase_push">Firebase Android Documentation</a>
