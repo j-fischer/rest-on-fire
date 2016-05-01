@@ -11,6 +11,6 @@ import java.io.IOException;
 public final class FirebaseAccessException extends FirebaseRuntimeException {
 
   public FirebaseAccessException(Response response)  throws IOException {
-    super(String.format("The access to the reference '%s' was not permitted", response.getUri()));
+    super(String.format("The access to the reference '%s' was not permitted. Status code: %s", response.getUri(), response.getStatusCode()));
   }
 }

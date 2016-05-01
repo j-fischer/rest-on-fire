@@ -2,6 +2,7 @@ package org.restonfire.integrationTests
 
 import org.jdeferred.Promise
 import org.restonfire.FirebaseRestNamespace
+import org.restonfire.exceptions.FirebaseAccessException
 import org.restonfire.exceptions.FirebaseRuntimeException
 import org.restonfire.integrationTests.data.SampleData
 import spock.util.concurrent.AsyncConditions
@@ -17,6 +18,22 @@ class GetValueOperationTest extends AbstractTest {
     // Run this inside the setup to ensure that the setup function in the AbstractTest class is completed before the
     // namespace is crated. This ensures that the token will be created
     namespace = createNamespace()
+  }
+
+  def "Try to get value without permission"() {
+    AsyncConditions cond = new AsyncConditions();
+
+    when: "making request to retrieve integer value"
+    namespace.getReference("noReadAccess")
+      .getValue(String.class)
+      .always({ Promise.State state, String val, FirebaseRuntimeException ex ->
+      cond.evaluate {
+        assert val == null
+        assert ex.getClass() == FirebaseAccessException.class
+      }
+    })
+    then: "wait for result evaluation"
+    cond.await(3);
   }
 
   def "Get value for integer type"() {

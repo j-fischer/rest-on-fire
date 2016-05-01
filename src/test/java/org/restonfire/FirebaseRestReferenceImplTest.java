@@ -76,6 +76,12 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   }
 
   @Test
+  public void testGetValue_unauthorized() throws Exception {
+    expectGetRequest();
+    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, null);
+  }
+
+  @Test
   public void testGetValue_unsupportedStatusCode() throws Exception {
     expectGetRequest();
     executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
@@ -124,6 +130,13 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   }
 
   @Test
+  public void testSetValue_unauthorized() throws Exception {
+    expectSetRequest(null);
+
+    executedFailedRequestTest(ref.setValue((SampleData) null), HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, null);
+  }
+
+  @Test
   public void testSetValue_unsupportedStatusCode() throws Exception {
     expectSetRequest(sampleData);
     executedFailedRequestTest(ref.setValue(sampleData), HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
@@ -163,6 +176,13 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     expectUpdateRequest(null);
 
     executedFailedRequestTest(ref.updateValue((SampleData) null), HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null);
+  }
+
+  @Test
+  public void testUpdateValue_unauthorized() throws Exception {
+    expectUpdateRequest(null);
+
+    executedFailedRequestTest(ref.updateValue((SampleData) null), HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, null);
   }
 
   @Test
@@ -208,6 +228,13 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   }
 
   @Test
+  public void testRemoveValue_unauthorized() throws Exception {
+    expectRemoveRequest();
+
+    executedFailedRequestTest(ref.removeValue(), HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, null);
+  }
+
+  @Test
   public void testRemoveValue_unsupportedStatusCode() throws Exception {
     expectRemoveRequest();
     executedFailedRequestTest(ref.removeValue(), HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
@@ -247,6 +274,13 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     expectPushRequest();
 
     executedFailedRequestTest(ref.push(), HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null);
+  }
+
+  @Test
+  public void testPush_unauthorized() throws Exception {
+    expectPushRequest();
+
+    executedFailedRequestTest(ref.push(), HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, null);
   }
 
   @Test

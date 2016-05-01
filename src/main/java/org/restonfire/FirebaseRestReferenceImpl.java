@@ -232,6 +232,7 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
           return clazz == null
             ? null
             : gson.fromJson(response.getResponseBody(), clazz);
+        case HttpURLConnection.HTTP_UNAUTHORIZED:
         case HttpURLConnection.HTTP_FORBIDDEN:
           LOG.warn("The request to '{}' that violates the Security and Firebase Rules", referenceUrl);
           throw new FirebaseAccessException(response);
