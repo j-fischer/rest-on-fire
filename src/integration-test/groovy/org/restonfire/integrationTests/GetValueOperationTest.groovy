@@ -16,7 +16,7 @@ class GetValueOperationTest extends AbstractTest {
   void setup() {
     // Run this inside the setup to ensure that the setup function in the AbstractTest class is completed before the
     // namespace is crated. This ensures that the token will be created
-    namespace = createNamespaceWithToken()
+    namespace = createNamespace()
   }
 
   def "Get value for integer type"() {

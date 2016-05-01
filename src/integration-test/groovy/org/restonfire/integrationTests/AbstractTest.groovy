@@ -51,21 +51,14 @@ abstract class AbstractTest extends Specification {
     cond.await(3)
   }
 
-  FirebaseRestNamespace createNamespaceWithoutToken() {
-    return createNamespace(null)
-  }
-
-  FirebaseRestNamespace createNamespaceWithToken() {
+  FirebaseRestNamespace createNamespace() {
     assert firebaseToken != null
-    return createNamespace(firebaseToken)
-  }
 
-  private FirebaseRestNamespace createNamespace(String token) {
     return BaseFirebaseRestNamespaceFactory.create(
       asyncHttpClient,
       gson,
       namespaceUrl,
-      token
+      firebaseToken
     )
   }
 
