@@ -26,10 +26,14 @@ public interface FirebaseRestReference {
    * Retrieves the value for this reference URL from Firebase.<br>
    * <br>
    * The promise returned will be rejected with the following two exceptions:<br>
-   * <pre>
-   * org.restonfire.exceptions.FirebaseAccessException: A {@link FirebaseRuntimeException} in the case that access to the data for this reference was denied.
-   * org.restonfire.exceptions.FirebaseRestException:   A {@link FirebaseRuntimeException} in the case that an unexpected status code was returned or the deserialization of the response into the type parameter fails.
-   * </pre>
+   * <ul>
+   *   <li><b>org.restonfire.exceptions.FirebaseAccessException</b> - A {@link FirebaseRuntimeException} in the case that
+   *        access to the data for this reference was denied.
+   *   </li>
+   *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that an
+   *        unexpected status code was returned or the deserialization of the response into the type parameter fails.
+   *   </li>
+   * <ul/>
    * @param clazz The {@link Class} type for the POJO to be created for the data returned by the request.
    * @param <T> The type of the result object.
    * @return A promise which will be resolved with the POJO generated from the response if the request was successful.
@@ -41,10 +45,14 @@ public interface FirebaseRestReference {
    * under that location. Providing a <code>null</code> value is the equivalent of removing the data at this location.<br>
    * <br>
    * The promise returned will be rejected with the following two exceptions:<br>
-   * <pre>
-   * org.restonfire.exceptions.FirebaseAccessException: A {@link FirebaseRuntimeException} in the case that access to the data for this reference was denied.
-   * org.restonfire.exceptions.FirebaseRestException:   A {@link FirebaseRuntimeException} in the case that an unexpected status code was returned or the deserialization of the response into the type parameter fails.
-   * </pre>
+   * <ul>
+   *   <li><b>org.restonfire.exceptions.FirebaseAccessException</b> - A {@link FirebaseRuntimeException} in the case that
+   *        access to the data for this reference was denied.
+   *   </li>
+   *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that an
+   *        unexpected status code was returned or the deserialization of the response into the type parameter fails.
+   *   </li>
+   * <ul/>
    * @param value The value to be written to Firebase.
    * @param <T> The type of the parameter object.
    * @return A promise which will resolve with the object passed in as the value if the request was successful.
@@ -57,10 +65,14 @@ public interface FirebaseRestReference {
    * will remain the same.<br>
    * <br>
    * The promise returned will be rejected with the following two exceptions:<br>
-   * <pre>
-   * org.restonfire.exceptions.FirebaseAccessException: A {@link FirebaseRuntimeException} in the case that access to the data for this reference was denied.
-   * org.restonfire.exceptions.FirebaseRestException:   A {@link FirebaseRuntimeException} in the case that an unexpected status code was returned or the deserialization of the response into the type parameter fails.
-   * </pre>
+   * <ul>
+   *   <li><b>org.restonfire.exceptions.FirebaseAccessException</b> - A {@link FirebaseRuntimeException} in the case that
+   *        access to the data for this reference was denied.
+   *   </li>
+   *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that an
+   *        unexpected status code was returned or the deserialization of the response into the type parameter fails.
+   *   </li>
+   * <ul/>
    * @param value The value to be written to Firebase.
    * @param <T> The type of the parameter object.
    * @return A promise which will resolve with the object passed in as the value if the request was successful.
@@ -72,10 +84,14 @@ public interface FirebaseRestReference {
    * to <code>null</code>.<br>
    * <br>
    * The promise returned will be rejected with the following two exceptions:<br>
-   * <pre>
-   * org.restonfire.exceptions.FirebaseAccessException: A {@link FirebaseRuntimeException} in the case that access to the data for this reference was denied.
-   * org.restonfire.exceptions.FirebaseRestException:   A {@link FirebaseRuntimeException} in the case that an unexpected status code was returned.
-   * </pre>
+   * <ul>
+   *   <li><b>org.restonfire.exceptions.FirebaseAccessException</b> - A {@link FirebaseRuntimeException} in the case that
+   *        access to the data for this reference was denied.
+   *   </li>
+   *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that
+   *        an unexpected status code was returned.
+   *   </li>
+   * <ul/>
    * @return A promise which will be resolved with a <code>null</code> value if the request was successful.
    */
   Promise<Void, FirebaseRuntimeException, Void> removeValue();
@@ -85,10 +101,14 @@ public interface FirebaseRestReference {
    * identifier returned by this .<br>
    * <br>
    * The promise returned will be rejected with the following two exceptions:<br>
-   * <pre>
-   * org.restonfire.exceptions.FirebaseAccessException: A {@link FirebaseRuntimeException} in the case that access to the data for this reference was denied.
-   * org.restonfire.exceptions.FirebaseRestException:   A {@link FirebaseRuntimeException} in the case that an unexpected status code was returned.
-   * </pre>
+   * <ul>
+   *   <li><b>org.restonfire.exceptions.FirebaseAccessException</b> - A {@link FirebaseRuntimeException} in the case that
+   *        access to the data for this reference was denied.
+   *   </li>
+   *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that
+   *        an unexpected status code was returned.
+   *   </li>
+   * <ul/>
    * @return The reference to the newly created child in Firebase.
    *
    * @see <a href="https://www.firebase.com/docs/android/api/#firebase_push">Firebase Android Documentation</a>
