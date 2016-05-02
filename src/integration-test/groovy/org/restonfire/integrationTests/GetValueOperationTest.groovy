@@ -8,7 +8,7 @@ import org.restonfire.integrationTests.data.SampleData
 import spock.util.concurrent.AsyncConditions
 
 /**
- * Verifies basic operations against a real Firebase namespace.
+ * Verifies get operations against a real Firebase namespace.
  */
 class GetValueOperationTest extends AbstractTest {
 
@@ -23,7 +23,7 @@ class GetValueOperationTest extends AbstractTest {
   def "Try to get value without permission"() {
     AsyncConditions cond = new AsyncConditions();
 
-    when: "making request to retrieve integer value"
+    when: "making request to retrieve a string value without permission"
     namespace.getReference("noReadAccess")
       .getValue(String.class)
       .always({ Promise.State state, String val, FirebaseRuntimeException ex ->
@@ -94,7 +94,7 @@ class GetValueOperationTest extends AbstractTest {
       cond.evaluate {
         assert ex == null
         assert val != null
-        assert val.getFoo() == "bar"
+        assert val.foo == "bar"
       }
     })
     then: "wait for result evaluation"
