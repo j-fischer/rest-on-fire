@@ -7,7 +7,7 @@ import org.restonfire.exceptions.FirebaseRuntimeException
 import spock.util.concurrent.AsyncConditions
 
 /**
- * Created by jfischer on 2016-05-01.
+ * Verifies removal operations against a real Firebase namespace.
  */
 class RemoveValueOperationTest extends AbstractTest {
 
