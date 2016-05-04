@@ -26,8 +26,8 @@ NOTE: The initial release has not yet been published yet!!!
 Releases are published to [bintray jcenter](https://bintray.com/bintray/jcenter) (package appear immediately after release) 
 and then to maven central (require few days after release to be published). 
 
-<!---
 [![JCenter](https://img.shields.io/bintray/v/j-fischer/rest-on-fire/rest-on-fire.svg?label=jcenter)](https://bintray.com/j-fischer/rest-on-fire/rest-on-fire/_latestVersion)
+<!---
 [![Maven Central](https://img.shields.io/maven-central/v/org.restonfire/rest-on-fire.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.restonfire/rest-on-fire)
 -->
 
