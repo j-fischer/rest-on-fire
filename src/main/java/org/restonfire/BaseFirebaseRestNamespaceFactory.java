@@ -2,58 +2,45 @@ package org.restonfire;
 
 import com.google.gson.Gson;
 import com.ning.http.client.AsyncHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link FirebaseRestNamespace} implementation using {@link AsyncHttpClient} as the HTTP
  * transport library. This factory also requires the Firebase access token to be provided
  * for the creation.
  */
-public final class BaseFirebaseRestNamespaceFactory implements FirebaseRestNamespace {
+public final class BaseFirebaseRestNamespaceFactory implements FirebaseRestNamespaceFactory {
 
-  /**
-   * Creates a FirebaseRestNamespace instance for the given namespace URL.
-   *
-   * @param asyncHttpClient {@link AsyncHttpClient} instance, which will be used for the HTTP requests.
-   * @param gson {@link Gson} instance used for deserialization of all reference responses.
-   * @param namespaceUrl A {@link String} representing the Firebase namespace, i.e. https://myinstance.firebaseio.com
-   * @param firebaseAccessToken The access token (or secret) for that Firebase namespace. Value can be <code>null</code>
-   *
-   * @return An instance of a namespace representation for the given namespace URL.
-   */
-  public static FirebaseRestNamespace create(
-    AsyncHttpClient asyncHttpClient,
-    Gson gson,
-    String namespaceUrl,
-    String firebaseAccessToken) {
-
-    return new BaseFirebaseRestNamespaceFactory(asyncHttpClient, gson, namespaceUrl, firebaseAccessToken);
-  }
+  private static final Logger LOG = LoggerFactory.getLogger(BaseFirebaseRestNamespaceFactory.class);
 
   private final AsyncHttpClient asyncHttpClient;
   private final Gson gson;
-  private final String namespaceUrl;
-  private final String firebaseAccessToken;
 
-  private BaseFirebaseRestNamespaceFactory(
+  /**
+   * Base factory which requires the {@link AsyncHttpClient} and {@link Gson} dependencies to be injected.
+   *
+   * @param asyncHttpClient {@link AsyncHttpClient} instance, which will be used for the HTTP requests.
+   * @param gson {@link Gson} instance used for deserialization of all reference responses.
+   */
+  public BaseFirebaseRestNamespaceFactory(
     AsyncHttpClient asyncHttpClient,
-    Gson gson,
-    String namespaceUrl,
-    String firebaseAccessToken
+    Gson gson
   ) {
     this.asyncHttpClient = asyncHttpClient;
     this.gson = gson;
-    this.namespaceUrl = PathUtil.normalizePath(namespaceUrl);
-    this.firebaseAccessToken = firebaseAccessToken;
   }
 
   @Override
-  public FirebaseRestReference getReference(String path) {
-    return new FirebaseRestReferenceImpl(
-      asyncHttpClient,
-      gson,
+  public FirebaseRestNamespace create(
+    String namespaceUrl,
+    String firebaseAccessToken) {
+
+    LOG.info("Creating FirebaseRestNamespace for url '{}' {} accessToken",
       namespaceUrl,
-      firebaseAccessToken,
-      path
+      StringUtil.notNullOrEmpty(firebaseAccessToken) ? "with" : "without"
     );
+
+    return new FirebaseRestNamespaceImpl(asyncHttpClient, gson, namespaceUrl, firebaseAccessToken);
   }
 }

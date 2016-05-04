@@ -24,12 +24,15 @@ abstract class AbstractTest extends Specification {
   private String firebaseToken
   private Promise<Map<String, Object>, FirebaseRuntimeException, Void> setupPromise
 
+  private BaseFirebaseRestNamespaceFactory factory = new BaseFirebaseRestNamespaceFactory(
+    asyncHttpClient,
+    gson
+  );
+
   void setup() {
     AsyncConditions cond = new AsyncConditions()
 
-    setupPromise = BaseFirebaseRestNamespaceFactory.create(
-        asyncHttpClient,
-        gson,
+    setupPromise = factory.create(
         namespaceUrl,
         firebaseSecret
       )
@@ -54,9 +57,7 @@ abstract class AbstractTest extends Specification {
   FirebaseRestNamespace createNamespace() {
     assert firebaseToken != null
 
-    return BaseFirebaseRestNamespaceFactory.create(
-      asyncHttpClient,
-      gson,
+    return factory.create(
       namespaceUrl,
       firebaseToken
     )

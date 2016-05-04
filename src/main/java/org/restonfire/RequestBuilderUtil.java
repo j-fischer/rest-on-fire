@@ -49,14 +49,10 @@ final class RequestBuilderUtil {
   }
 
   private static AsyncHttpClient.BoundRequestBuilder addQueryParamsIfApplicable(AsyncHttpClient.BoundRequestBuilder requestBuilder, String accessToken) {
-    if (notNullOrEmpty(accessToken)) {
+    if (StringUtil.notNullOrEmpty(accessToken)) {
       return requestBuilder.addQueryParam("auth", accessToken);
     }
 
     return requestBuilder;
-  }
-
-  private static boolean notNullOrEmpty(String aString) {
-    return aString != null && aString.length() > 0;
   }
 }

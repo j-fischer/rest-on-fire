@@ -2,8 +2,6 @@ package org.restonfire;
 
 /**
  * Utility class for path operations.
- *
- * Created by jfischer on 2016-04-14.
  */
 final class PathUtil {
 
