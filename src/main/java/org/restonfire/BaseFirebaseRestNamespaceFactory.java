@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * {@link FirebaseRestNamespace} implementation using {@link AsyncHttpClient} as the HTTP
+ * {@link FirebaseRestNamespaceFactory} implementation using {@link AsyncHttpClient} as the HTTP
  * transport library. This factory also requires the Firebase access token to be provided
  * for the creation.
  */
