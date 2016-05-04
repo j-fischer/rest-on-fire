@@ -24,11 +24,20 @@ public class BaseFirebaseRestNamespaceFactoryTest extends AbstractMockTestCase {
   private final FirebaseRestNamespaceFactory factory = new BaseFirebaseRestNamespaceFactory(asyncHttpClient, gson);
 
   @Test
-  public void testGetReference() {
+  public void testGetReference_withAccessToken() {
+    executeCreateTest(fbBaseUrl, fbAccessToken);
+  }
+
+  @Test
+  public void testGetReference_withoutAccessToken() {
+    executeCreateTest(fbBaseUrl, null);
+  }
+
+  private void executeCreateTest(String fbBaseUrl, String fbAccessToken) {
     FirebaseRestNamespace namespace = factory.create(fbBaseUrl, fbAccessToken);
 
     FirebaseRestReference result = namespace.getReference(path);
 
-    assertEquals(fbBaseUrl + PathUtil.FORWARD_SLASH + path, result.getReferenceUrl());
+    assertEquals(this.fbBaseUrl + PathUtil.FORWARD_SLASH + path, result.getReferenceUrl());
   }
 }
