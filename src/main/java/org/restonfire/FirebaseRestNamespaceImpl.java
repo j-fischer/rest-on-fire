@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by jfischer on 2016-05-03.
+ * {@link FirebaseRestNamespace} implementation.
  */
 class FirebaseRestNamespaceImpl implements FirebaseRestNamespace {
 
