@@ -1,5 +1,6 @@
 package org.restonfire.integrationTests
 
+import org.jdeferred.DoneCallback
 import org.jdeferred.Promise
 import org.restonfire.FirebaseRestNamespace
 import org.restonfire.exceptions.FirebaseAccessException
@@ -80,6 +81,24 @@ class GetValueOperationTest extends AbstractTest {
         assert val == "aString"
       }
     })
+    then: "wait for result evaluation"
+    cond.await(3);
+  }
+
+  def "Get value for string type with done callback"() {
+    AsyncConditions cond = new AsyncConditions();
+
+    when: "making request to retrieve integer value"
+    namespace.getReference("testData/text")
+      .getValue(String.class)
+      .done(new DoneCallback<String>() {
+        @Override
+        void onDone(String result) {
+          cond.evaluate {
+            assert result == "aString"
+          }
+        }
+      })
     then: "wait for result evaluation"
     cond.await(3);
   }
