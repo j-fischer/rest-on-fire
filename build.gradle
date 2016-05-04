@@ -65,7 +65,7 @@ description = 'Firebase REST API wrapper for Java'
 
 github {
   user = 'j-fischer'
-  license = 'Apache-2.0'
+  license = 'Apache'
 }
 
 pom {
