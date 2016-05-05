@@ -21,7 +21,7 @@ Additional information on the AsyncHttpClient can be found [here](https://jfarca
 
 ### Setup
 
-NOTE: The initial release has not yet been published yet!!!
+NOTE: The initial release has only been published to JCenter.
 
 Releases are published to [bintray jcenter](https://bintray.com/bintray/jcenter) (package appear immediately after release) 
 and then to maven central (require few days after release to be published). 
