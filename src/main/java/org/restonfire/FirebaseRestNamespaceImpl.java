@@ -41,4 +41,17 @@ class FirebaseRestNamespaceImpl implements FirebaseRestNamespace {
       path
     );
   }
+
+  @Override
+  public FirebaseRestEventStream getEventStream(String path) {
+    LOG.info("Creating new FirebaseEventStream for path '{}'", path);
+
+    return new FirebaseRestEventStreamImpl(
+      asyncHttpClient,
+      gson,
+      namespaceUrl,
+      firebaseAccessToken,
+      path
+    );
+  }
 }

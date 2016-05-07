@@ -17,6 +17,11 @@ public interface FirebaseRestNamespace {
    */
   FirebaseRestReference getReference(String path);
 
+  /**
+   *
+   * @param path
+   * @return The
+   */
+  FirebaseRestEventStream getEventStream(String path);
   // TODO: Add FirebaseSecurityRulesReference getSecurityRules();
-  // TODO: Add FirebaseEventStream getEventStream(String path);
 }

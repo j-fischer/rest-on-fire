@@ -11,6 +11,8 @@ package org.restonfire.exceptions;
  */
 public abstract class FirebaseRuntimeException extends RuntimeException {
 
+  //FIXME: Add ErrorCodes
+
   public FirebaseRuntimeException(String message) {
     super(message);
   }
