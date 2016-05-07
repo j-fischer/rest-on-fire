@@ -21,21 +21,14 @@ import java.net.HttpURLConnection;
 /**
  * {@link FirebaseRestReference} implementation.
  */
-final class FirebaseRestReferenceImpl implements FirebaseRestReference {
+final class FirebaseRestReferenceImpl extends FirebaseDocumentLocation implements FirebaseRestReference {
 
   private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestReferenceImpl.class);
-
-  public static final String JSON_SUFFIX = ".json";
 
   private static final String FAILED_TO_PARSE_RESPONSE_BODY_FOR_REQUEST = "Failed to parse responses body for request: ";
 
   private final Gson gson;
   private final AsyncHttpClient asyncHttpClient;
-
-  private final String path;
-  private final String fbBaseUrl;
-  private final String fbAccessToken;
-  private final String referenceUrl;
 
   FirebaseRestReferenceImpl(
     AsyncHttpClient asyncHttpClient,
@@ -44,18 +37,10 @@ final class FirebaseRestReferenceImpl implements FirebaseRestReference {
     String fbAccessToken,
     String path) {
 
+    super(fbBaseUrl, path, fbAccessToken);
+
     this.gson = gson;
     this.asyncHttpClient = asyncHttpClient;
-    this.fbBaseUrl = fbBaseUrl;
-    this.fbAccessToken = fbAccessToken;
-    this.path = path;
-
-    this.referenceUrl = PathUtil.concatenatePath(fbBaseUrl, path) + JSON_SUFFIX;
-  }
-
-  @Override
-  public String getReferenceUrl() {
-    return referenceUrl.substring(0, referenceUrl.length() - JSON_SUFFIX.length());
   }
 
   @Override

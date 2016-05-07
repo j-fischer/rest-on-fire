@@ -24,13 +24,12 @@ import java.util.Map;
 /**
  * Created by jfischer on 2016-05-05.
  */
-class FirebaseRestEventStreamImpl implements FirebaseRestEventStream {
+class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements FirebaseRestEventStream {
 
   private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestEventStreamImpl.class);
 
   private static final Map<String, EventStreamResponse.EventType> EVENT_TYPE_MAPPER;
-  static
-  {
+  static {
     EVENT_TYPE_MAPPER = new HashMap<>();
     EVENT_TYPE_MAPPER.put("put", EventStreamResponse.EventType.Set);
     EVENT_TYPE_MAPPER.put("patch", EventStreamResponse.EventType.Update);
@@ -41,29 +40,23 @@ class FirebaseRestEventStreamImpl implements FirebaseRestEventStream {
 
   private final Gson gson;
   private final AsyncHttpClient asyncHttpClient;
-
-  private final String path;
-  private final String fbBaseUrl;
-  private final String fbAccessToken;
-  private final String referenceUrl;
   private final AsyncHttpClient.BoundRequestBuilder eventStreamRequest;
 
+  private final Object lock = new Object();
   private ListenableFuture<Void> currentListener;
 
-  public FirebaseRestEventStreamImpl(
+  FirebaseRestEventStreamImpl(
     AsyncHttpClient asyncHttpClient,
     Gson gson,
     String fbBaseUrl,
     String fbAccessToken,
     String path) {
 
-    this.gson = gson;
-    this.asyncHttpClient = asyncHttpClient;
-    this.fbBaseUrl = fbBaseUrl;
-    this.fbAccessToken = fbAccessToken;
-    this.path = path;
+    super(fbBaseUrl, path, fbAccessToken);
 
-    this.referenceUrl = PathUtil.concatenatePath(fbBaseUrl, path) + FirebaseRestReferenceImpl.JSON_SUFFIX;
+    this.asyncHttpClient = asyncHttpClient;
+    this.gson = gson;
+
     this.eventStreamRequest = RequestBuilderUtil.createGet(
         asyncHttpClient,
         referenceUrl,
@@ -73,15 +66,73 @@ class FirebaseRestEventStreamImpl implements FirebaseRestEventStream {
   }
 
   @Override
-  public Promise<Void, FirebaseRuntimeException, EventStreamResponse>startListening() {
+  public Promise<Void, FirebaseRuntimeException, EventStreamResponse> startListening() {
     LOG.debug("startListening() invoked for reference {}", referenceUrl);
     final Deferred<Void, FirebaseRuntimeException, EventStreamResponse> deferred = new DeferredObject<>();
 
-    if (currentListener != null) {
-      // FIXME: throw exception
+    final AsyncHandler<Void> asyncRequestHandler = createAsyncHandler(deferred);
+
+    synchronized (lock) {
+      if (currentListener != null) {
+        // FIXME: throw exception
+      }
+
+      currentListener = eventStreamRequest.execute(asyncRequestHandler);
     }
 
-    currentListener = eventStreamRequest.execute(new AsyncHandler<Void>() {
+    return deferred.promise();
+  }
+
+  @Override
+  public void stopListening() {
+    synchronized (lock) {
+      if (currentListener == null) {
+        // FIXME: throw exception
+      }
+
+      currentListener.done();
+      currentListener = null;
+    }
+  }
+
+  @Override
+  public FirebaseRestEventStream getRoot() {
+    LOG.debug("getRoot() invoked for reference {}", referenceUrl);
+    return new FirebaseRestEventStreamImpl(
+      asyncHttpClient,
+      gson,
+      fbBaseUrl,
+      fbAccessToken,
+      ""
+    );
+  }
+
+  @Override
+  public FirebaseRestEventStream getParent() {
+    LOG.debug("getParent() invoked for reference {}", referenceUrl);
+    return new FirebaseRestEventStreamImpl(
+      asyncHttpClient,
+      gson,
+      fbBaseUrl,
+      fbAccessToken,
+      PathUtil.getParent(path)
+    );
+  }
+
+  @Override
+  public FirebaseRestEventStream child(String childPath) {
+    LOG.debug("child({}) invoked for reference {}", childPath, referenceUrl);
+    return new FirebaseRestEventStreamImpl(
+      asyncHttpClient,
+      gson,
+      fbBaseUrl,
+      fbAccessToken,
+      PathUtil.concatenatePath(path, childPath)
+    );
+  }
+
+  private AsyncHandler<Void> createAsyncHandler(final Deferred<Void, FirebaseRuntimeException, EventStreamResponse> deferred) {
+    return new AsyncHandler<Void>() {
       @Override
       public void onThrowable(Throwable t) {
         LOG.error("EventStream for location '" + referenceUrl + "' failed", t);
@@ -91,7 +142,7 @@ class FirebaseRestEventStreamImpl implements FirebaseRestEventStream {
       public STATE onBodyPartReceived(HttpResponseBodyPart bodyPart) throws Exception {
         LOG.debug("Received event");
 
-        EventStreamResponse response = parseResponse(bodyPart.getBodyPartBytes());
+        final EventStreamResponse response = parseResponse(bodyPart.getBodyPartBytes());
 
         switch (response.getEventType()) {
           case KeepAlive:
@@ -126,19 +177,7 @@ class FirebaseRestEventStreamImpl implements FirebaseRestEventStream {
         deferred.resolve(null);
         return null;
       }
-    });
-
-    return deferred.promise();
-  }
-
-  @Override
-  public void stopListening() {
-    if (currentListener == null) {
-      // FIXME: throw exception
-    }
-
-    currentListener.done();
-    currentListener = null;
+    };
   }
 
   private EventStreamResponse parseResponse(byte[] response) throws IOException {
@@ -146,8 +185,8 @@ class FirebaseRestEventStreamImpl implements FirebaseRestEventStream {
     try (ByteArrayInputStream is = new ByteArrayInputStream(response);
          BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")))) {
 
-      EventStreamResponse.EventType eventType = getEventType(reader.readLine());
-      Map<String, Object> eventData = eventType == EventStreamResponse.EventType.Set || eventType == EventStreamResponse.EventType.Update
+      final EventStreamResponse.EventType eventType = getEventType(reader.readLine());
+      final Map<String, Object> eventData = eventType == EventStreamResponse.EventType.Set || eventType == EventStreamResponse.EventType.Update
         ? getEventData(reader.readLine())
         : null;
 
@@ -157,15 +196,19 @@ class FirebaseRestEventStreamImpl implements FirebaseRestEventStream {
 
   private EventStreamResponse.EventType getEventType(String eventString) {
     LOG.debug("Mapping event type -> " + eventString);
+
+    // eventString format -> event: <eventType>
     return EVENT_TYPE_MAPPER.get(
-      eventString.split(":")[1].trim().toLowerCase() // format -> event: <eventType>
+      eventString.split(":")[1].trim().toLowerCase()
     );
   }
 
-  private Map<String,Object> getEventData(String dataString) {
+  private Map<String, Object> getEventData(String dataString) {
     LOG.debug("Deserializing event data -> " + dataString);
+
+    // dataString format -> data: <data>
     return gson.fromJson(
-      dataString.replaceFirst("data:", "").trim(), // format -> data: <data>
+      dataString.replaceFirst("data:", "").trim(),
       new TypeToken<Map<String, Object>>() { }.getType()
     );
   }

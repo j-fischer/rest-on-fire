@@ -23,7 +23,12 @@ public class EventStreamResponse {
     return eventData;
   }
 
-  public static enum EventType {
+  /**
+   * Enum describing the different event types to be returned by the Firebase streaming service.
+   *
+   * @see <a href="https://www.firebase.com/docs/rest/api/#section-streaming">Streaming from Firebase REST API</a>
+   */
+  public enum EventType {
     Set,
     Update,
     KeepAlive,
