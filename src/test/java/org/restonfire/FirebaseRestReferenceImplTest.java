@@ -72,31 +72,31 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   @Test
   public void testGetValue_forbidden() throws Exception {
     expectGetRequest();
-    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null);
+    executedForbiddenRequestTest(ref.getValue(SampleData.class));
   }
 
   @Test
   public void testGetValue_unauthorized() throws Exception {
     expectGetRequest();
-    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, null);
+    executedUnauthorizedRequestTest(ref.getValue(SampleData.class));
   }
 
   @Test
   public void testGetValue_unsupportedStatusCode() throws Exception {
     expectGetRequest();
-    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_GATEWAY_TIMEOUT);
 
     expectGetRequest();
-    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_INTERNAL_ERROR, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_INTERNAL_ERROR);
 
     expectGetRequest();
-    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_NOT_FOUND, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_NOT_FOUND);
   }
 
   @Test
   public void testGetValue_invalidClassType() throws Exception {
     expectGetRequest();
-    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_OK, FirebaseRestException.class, "{aString: 'abc', anInt: 'foo'}");
+    executedFailedRequestTest(ref.getValue(SampleData.class), HttpURLConnection.HTTP_OK, FirebaseRestException.class, "{aString: 'abc', anInt: 'foo'}", FirebaseRuntimeException.ErrorCode.ResponseDeserializationFailure);
   }
 
   @Test
@@ -126,26 +126,26 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   public void testSetValue_forbidden() throws Exception {
     expectSetRequest(null);
 
-    executedFailedRequestTest(ref.setValue((SampleData) null), HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null);
+    executedForbiddenRequestTest(ref.setValue((SampleData) null));
   }
 
   @Test
   public void testSetValue_unauthorized() throws Exception {
     expectSetRequest(null);
 
-    executedFailedRequestTest(ref.setValue((SampleData) null), HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, null);
+    executedUnauthorizedRequestTest(ref.setValue((SampleData) null));
   }
 
   @Test
   public void testSetValue_unsupportedStatusCode() throws Exception {
     expectSetRequest(sampleData);
-    executedFailedRequestTest(ref.setValue(sampleData), HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.setValue(sampleData), HttpURLConnection.HTTP_GATEWAY_TIMEOUT);
 
     expectSetRequest(sampleData);
-    executedFailedRequestTest(ref.setValue(sampleData), HttpURLConnection.HTTP_INTERNAL_ERROR, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.setValue(sampleData), HttpURLConnection.HTTP_INTERNAL_ERROR);
 
     expectSetRequest(sampleData);
-    executedFailedRequestTest(ref.setValue(sampleData), HttpURLConnection.HTTP_NOT_FOUND, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.setValue(sampleData), HttpURLConnection.HTTP_NOT_FOUND);
   }
   
   @Test
@@ -175,26 +175,26 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   public void testUpdateValue_forbidden() throws Exception {
     expectUpdateRequest(null);
 
-    executedFailedRequestTest(ref.updateValue((SampleData) null), HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null);
+    executedForbiddenRequestTest(ref.updateValue((SampleData) null));
   }
 
   @Test
   public void testUpdateValue_unauthorized() throws Exception {
     expectUpdateRequest(null);
 
-    executedFailedRequestTest(ref.updateValue((SampleData) null), HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, null);
+    executedUnauthorizedRequestTest(ref.updateValue((SampleData) null));
   }
 
   @Test
   public void testUpdateValue_unsupportedStatusCode() throws Exception {
     expectUpdateRequest(sampleData);
-    executedFailedRequestTest(ref.updateValue(sampleData), HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.updateValue(sampleData), HttpURLConnection.HTTP_GATEWAY_TIMEOUT);
 
     expectUpdateRequest(sampleData);
-    executedFailedRequestTest(ref.updateValue(sampleData), HttpURLConnection.HTTP_INTERNAL_ERROR, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.updateValue(sampleData), HttpURLConnection.HTTP_INTERNAL_ERROR);
 
     expectUpdateRequest(sampleData);
-    executedFailedRequestTest(ref.updateValue(sampleData), HttpURLConnection.HTTP_NOT_FOUND, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.updateValue(sampleData), HttpURLConnection.HTTP_NOT_FOUND);
   }
 
   @Test
@@ -224,26 +224,26 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   public void testRemoveValue_forbidden() throws Exception {
     expectRemoveRequest();
 
-    executedFailedRequestTest(ref.removeValue(), HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null);
+    executedForbiddenRequestTest(ref.removeValue());
   }
 
   @Test
   public void testRemoveValue_unauthorized() throws Exception {
     expectRemoveRequest();
 
-    executedFailedRequestTest(ref.removeValue(), HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, null);
+    executedUnauthorizedRequestTest(ref.removeValue());
   }
 
   @Test
   public void testRemoveValue_unsupportedStatusCode() throws Exception {
     expectRemoveRequest();
-    executedFailedRequestTest(ref.removeValue(), HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.removeValue(), HttpURLConnection.HTTP_GATEWAY_TIMEOUT);
 
     expectRemoveRequest();
-    executedFailedRequestTest(ref.removeValue(), HttpURLConnection.HTTP_INTERNAL_ERROR, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.removeValue(), HttpURLConnection.HTTP_INTERNAL_ERROR);
 
     expectRemoveRequest();
-    executedFailedRequestTest(ref.removeValue(), HttpURLConnection.HTTP_NOT_FOUND, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.removeValue(), HttpURLConnection.HTTP_NOT_FOUND);
   }
 
   @Test
@@ -273,26 +273,26 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   public void testPush_forbidden() throws Exception {
     expectPushRequest();
 
-    executedFailedRequestTest(ref.push(), HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null);
+    executedForbiddenRequestTest(ref.push());
   }
 
   @Test
   public void testPush_unauthorized() throws Exception {
     expectPushRequest();
 
-    executedFailedRequestTest(ref.push(), HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, null);
+    executedUnauthorizedRequestTest(ref.push());
   }
 
   @Test
   public void testPush_unsupportedStatusCode() throws Exception {
     expectPushRequest();
-    executedFailedRequestTest(ref.push(), HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.push(), HttpURLConnection.HTTP_GATEWAY_TIMEOUT);
 
     expectPushRequest();
-    executedFailedRequestTest(ref.push(), HttpURLConnection.HTTP_INTERNAL_ERROR, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.push(), HttpURLConnection.HTTP_INTERNAL_ERROR);
 
     expectPushRequest();
-    executedFailedRequestTest(ref.push(), HttpURLConnection.HTTP_NOT_FOUND, FirebaseRestException.class, null);
+    executedRequestWithUnsupportedResponseTest(ref.push(), HttpURLConnection.HTTP_NOT_FOUND);
   }
 
   @Test
@@ -345,7 +345,19 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     capturedCompletionHandler.getValue().onCompleted(response);
   }
 
-  private <TResult, TException extends FirebaseRuntimeException> void executedFailedRequestTest(Promise<TResult, FirebaseRuntimeException, Void> result, int statusCode, final Class<TException> exceptionClazz, String requestBody) throws Exception {
+  private <TResult> void executedRequestWithUnsupportedResponseTest(Promise<TResult, FirebaseRuntimeException, Void> result, int responseCode) throws Exception {
+    executedFailedRequestTest(result, responseCode, FirebaseRestException.class, null, FirebaseRuntimeException.ErrorCode.UnsupportedStatusCode);
+  }
+
+  private <TResult> void executedForbiddenRequestTest(Promise<TResult, FirebaseRuntimeException, Void> result) throws Exception {
+    executedFailedRequestTest(result, HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, null, FirebaseRuntimeException.ErrorCode.AccessViolation);
+  }
+
+  private <TResult> void executedUnauthorizedRequestTest(Promise<TResult, FirebaseRuntimeException, Void> result) throws Exception {
+    executedFailedRequestTest(result, HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, null, FirebaseRuntimeException.ErrorCode.AccessViolation);
+  }
+
+  private <TResult, TException extends FirebaseRuntimeException> void executedFailedRequestTest(Promise<TResult, FirebaseRuntimeException, Void> result, int statusCode, final Class<TException> exceptionClazz, String requestBody, final FirebaseRuntimeException.ErrorCode expectedErrorCode) throws Exception {
     result.then(new DoneCallback<TResult>() {
       @Override
       public void onDone(TResult result) {
@@ -355,6 +367,7 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
       @Override
       public void onFail(FirebaseRuntimeException result) {
         assertEquals(exceptionClazz, result.getClass());
+        assertEquals(expectedErrorCode, result.getErrorCode());
       }
     });
 

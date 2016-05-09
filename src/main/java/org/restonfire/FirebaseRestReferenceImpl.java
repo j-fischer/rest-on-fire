@@ -223,11 +223,11 @@ final class FirebaseRestReferenceImpl extends FirebaseDocumentLocation implement
           throw new FirebaseAccessException(response);
         default:
           LOG.error("Unsupported status code: " + response.getStatusCode());
-          throw new FirebaseRestException(response);
+          throw new FirebaseRestException(FirebaseRuntimeException.ErrorCode.UnsupportedStatusCode, response);
       }
     } catch (JsonSyntaxException | IOException e) {
       LOG.error(FAILED_TO_PARSE_RESPONSE_BODY_FOR_REQUEST + response.getUri(), e);
-      throw new FirebaseRestException(FAILED_TO_PARSE_RESPONSE_BODY_FOR_REQUEST + response.getUri(), e);
+      throw new FirebaseRestException(FirebaseRuntimeException.ErrorCode.ResponseDeserializationFailure, FAILED_TO_PARSE_RESPONSE_BODY_FOR_REQUEST + response.getUri(), e);
     }
   }
 }

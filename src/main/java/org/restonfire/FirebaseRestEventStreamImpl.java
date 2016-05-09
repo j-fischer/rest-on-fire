@@ -8,6 +8,7 @@ import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 import org.restonfire.exceptions.FirebaseAccessException;
 import org.restonfire.exceptions.FirebaseAuthenticationExpiredException;
+import org.restonfire.exceptions.FirebaseInvalidStateException;
 import org.restonfire.exceptions.FirebaseRuntimeException;
 import org.restonfire.responses.EventStreamResponse;
 import org.slf4j.Logger;
@@ -74,7 +75,7 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
 
     synchronized (lock) {
       if (currentListener != null) {
-        // FIXME: throw exception
+        throw new FirebaseInvalidStateException(FirebaseRuntimeException.ErrorCode.EventStreamListenerAlreadyActive, "The EventStream is already running");
       }
 
       currentListener = eventStreamRequest.execute(asyncRequestHandler);
@@ -87,7 +88,7 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
   public void stopListening() {
     synchronized (lock) {
       if (currentListener == null) {
-        // FIXME: throw exception
+        throw new FirebaseInvalidStateException(FirebaseRuntimeException.ErrorCode.NoEventStreamListenerActive, "The EventStream is currently not active");
       }
 
       currentListener.done();
@@ -199,7 +200,7 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
 
     // eventString format -> event: <eventType>
     return EVENT_TYPE_MAPPER.get(
-      eventString.split(":")[1].trim().toLowerCase()
+      eventString.replaceFirst("event:", "").trim().toLowerCase()
     );
   }
 

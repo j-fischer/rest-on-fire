@@ -9,12 +9,11 @@ import java.io.IOException;
  */
 public final class FirebaseRestException extends FirebaseRuntimeException {
 
-  public FirebaseRestException(Response response) throws IOException {
-    super(String.format("The REST request to '%s' failed with the following status code: %s", response.getUri(), response.getStatusCode()));
+  public FirebaseRestException(ErrorCode errorCode, Response response) throws IOException {
+    super(errorCode, String.format("The REST request to '%s' failed with the following status code: %s", response.getUri(), response.getStatusCode()));
   }
 
-  public FirebaseRestException(String message, Exception cause) {
-    super(message, cause);
+  public FirebaseRestException(ErrorCode errorCode, String message, Exception cause) {
+    super(errorCode, message, cause);
   }
-
 }

@@ -6,6 +6,6 @@ package org.restonfire.exceptions;
 public class FirebaseAuthenticationExpiredException extends FirebaseRuntimeException {
 
   public FirebaseAuthenticationExpiredException(String referenceUrl) {
-    super("The access token for this connection has expired. Location: " + referenceUrl);
+    super(ErrorCode.AuthenticationExpired, "The access token for this connection has expired. Location: " + referenceUrl);
   }
 }

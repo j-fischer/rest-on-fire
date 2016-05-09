@@ -11,13 +11,31 @@ package org.restonfire.exceptions;
  */
 public abstract class FirebaseRuntimeException extends RuntimeException {
 
-  //FIXME: Add ErrorCodes
+  private final ErrorCode errorCode;
 
-  public FirebaseRuntimeException(String message) {
+  public FirebaseRuntimeException(ErrorCode errorCode, String message) {
     super(message);
+    this.errorCode = errorCode;
   }
 
-  public FirebaseRuntimeException(String message, Throwable cause) {
+  public FirebaseRuntimeException(ErrorCode errorCode, String message, Throwable cause) {
     super(message, cause);
+    this.errorCode = errorCode;
+  }
+
+  public ErrorCode getErrorCode() {
+    return errorCode;
+  }
+
+  /**
+   * Enum describing the different errors that can occur within this library.
+   */
+  public enum ErrorCode {
+    AccessViolation,
+    AuthenticationExpired,
+    ResponseDeserializationFailure,
+    UnsupportedStatusCode,
+    EventStreamListenerAlreadyActive,
+    NoEventStreamListenerActive
   }
 }
