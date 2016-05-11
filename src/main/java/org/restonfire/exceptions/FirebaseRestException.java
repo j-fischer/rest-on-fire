@@ -1,5 +1,6 @@
 package org.restonfire.exceptions;
 
+import com.ning.http.client.HttpResponseStatus;
 import com.ning.http.client.Response;
 
 import java.io.IOException;
@@ -13,7 +14,13 @@ public final class FirebaseRestException extends FirebaseRuntimeException {
     super(errorCode, String.format("The REST request to '%s' failed with the following status code: %s", response.getUri(), response.getStatusCode()));
   }
 
-  public FirebaseRestException(ErrorCode errorCode, String message, Exception cause) {
+  public FirebaseRestException(ErrorCode errorCode, HttpResponseStatus responseStatus) {
+    super(errorCode, String.format("The REST request to '%s' failed with the following status code: %s", responseStatus.getUri(), responseStatus.getStatusCode()));
+  }
+
+  public FirebaseRestException(ErrorCode errorCode, String message, Throwable cause) {
     super(errorCode, message, cause);
   }
+
+
 }

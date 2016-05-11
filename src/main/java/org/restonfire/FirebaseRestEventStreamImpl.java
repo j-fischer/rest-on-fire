@@ -1,15 +1,11 @@
 package org.restonfire;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ning.http.client.*;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
-import org.restonfire.exceptions.FirebaseAccessException;
-import org.restonfire.exceptions.FirebaseAuthenticationExpiredException;
-import org.restonfire.exceptions.FirebaseInvalidStateException;
-import org.restonfire.exceptions.FirebaseRuntimeException;
+import org.restonfire.exceptions.*;
 import org.restonfire.responses.EventStreamResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,7 +85,7 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
   public void stopListening() {
     synchronized (lock) {
       if (currentListener == null) {
-        throw new FirebaseInvalidStateException(FirebaseRuntimeException.ErrorCode.NoEventStreamListenerActive, "The EventStream is currently not active");
+        throw new FirebaseInvalidStateException(FirebaseRuntimeException.ErrorCode.EventStreamListenerNotActive, "The EventStream is currently not active");
       }
 
       currentListener.done();
@@ -136,7 +133,9 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
     return new AsyncHandler<Void>() {
       @Override
       public void onThrowable(Throwable t) {
-        LOG.error("EventStream for location '" + referenceUrl + "' failed", t);
+        final String message = "EventStream request for location '" + referenceUrl + "' failed";
+        LOG.error(message, t);
+        deferred.reject(new FirebaseRestException(FirebaseRuntimeException.ErrorCode.EventStreamRequestFailed, message, t));
       }
 
       @Override
@@ -147,22 +146,39 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
 
         switch (response.getEventType()) {
           case KeepAlive:
-            return STATE.CONTINUE;
+            break;
           case Cancel:
             deferred.reject(new FirebaseAccessException(referenceUrl));
-            return STATE.CONTINUE;
+            break;
           case Expired:
             deferred.reject(new FirebaseAuthenticationExpiredException(referenceUrl));
-            return STATE.CONTINUE;
+            break;
           default:
             deferred.notify(response);
-            return STATE.CONTINUE;
         }
+
+        return STATE.CONTINUE;
       }
 
       @Override
       public STATE onStatusReceived(HttpResponseStatus responseStatus) throws Exception {
         LOG.info("Received Status: " + responseStatus.getStatusCode());
+        switch (responseStatus.getStatusCode()) {
+          // 307 = Temporary Redirect
+          case 307:
+          case HttpURLConnection.HTTP_OK:
+            break;
+          case HttpURLConnection.HTTP_UNAUTHORIZED:
+          case HttpURLConnection.HTTP_FORBIDDEN:
+            LOG.warn("The request to '{}' that violates the Security and Firebase Rules", referenceUrl);
+            deferred.reject(new FirebaseAccessException(responseStatus));
+            break;
+          default:
+            LOG.error("Unsupported status code: " + responseStatus.getStatusCode());
+            deferred.reject(new FirebaseRestException(FirebaseRuntimeException.ErrorCode.UnsupportedStatusCode, responseStatus));
+            break;
+        }
+
         return STATE.CONTINUE;
       }
 
@@ -187,11 +203,9 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
          BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")))) {
 
       final EventStreamResponse.EventType eventType = getEventType(reader.readLine());
-      final Map<String, Object> eventData = eventType == EventStreamResponse.EventType.Set || eventType == EventStreamResponse.EventType.Update
-        ? getEventData(reader.readLine())
-        : null;
+      final String eventData = getEventData(reader.readLine());
 
-      return new EventStreamResponse(eventType, eventData);
+      return new EventStreamResponse(gson, eventType, eventData);
     }
   }
 
@@ -204,13 +218,10 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
     );
   }
 
-  private Map<String, Object> getEventData(String dataString) {
-    LOG.debug("Deserializing event data -> " + dataString);
+  private String getEventData(String dataString) {
+    LOG.debug("Extracting event data -> " + dataString);
 
     // dataString format -> data: <data>
-    return gson.fromJson(
-      dataString.replaceFirst("data:", "").trim(),
-      new TypeToken<Map<String, Object>>() { }.getType()
-    );
+    return dataString.replaceFirst("data:", "").trim();
   }
 }

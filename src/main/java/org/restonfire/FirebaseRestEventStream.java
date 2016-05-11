@@ -10,6 +10,13 @@ import org.restonfire.responses.EventStreamResponse;
 public interface FirebaseRestEventStream {
 
   /**
+   * Returns the fully qualified URL for this FirebaseRestEventStream instance.
+   *
+   * @return The absolute URL of the current reference as a String.
+   */
+  String getReferenceUrl();
+
+  /**
    * Starts listening for the events on the current document location of this namespace. The first event will occur
    * immediately and contains the current value at the location. Any consecutive events depend on actual modifications
    * applied to the current location or its children.<br>

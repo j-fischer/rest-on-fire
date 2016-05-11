@@ -12,14 +12,14 @@ public interface FirebaseRestNamespace {
    * With this reference object, the consumer can read or modify the data at this location, or travers
    * further down or up the tree.
    *
-   * @param path The location of the namespace to create a reference for.
+   * @param path The location within namespace to create a reference for.
    * @return The {@link FirebaseRestReference} for the given path.
    */
   FirebaseRestReference getReference(String path);
 
   /**
    *
-   * @param path
+   * @param path The location within namespace to create a event stream for.
    * @return The
    */
   FirebaseRestEventStream getEventStream(String path);

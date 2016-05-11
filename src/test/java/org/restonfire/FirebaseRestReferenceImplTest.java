@@ -16,6 +16,7 @@ import org.restonfire.exceptions.FirebaseAccessException;
 import org.restonfire.exceptions.FirebaseRestException;
 import org.restonfire.exceptions.FirebaseRuntimeException;
 import org.restonfire.responses.PushResponse;
+import org.restonfire.testdata.SampleData;
 import org.restonfire.testutils.AbstractMockTestCase;
 import org.restonfire.testutils.MockObjectHelper;
 
@@ -428,38 +429,6 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   }
 
   private String getFirebaseRestUrl() {
-    return fbReferenceUrl + FirebaseRestReferenceImpl.JSON_SUFFIX;
-  }
-
-  public static class SampleData {
-    public String aString;
-    public int anInt;
-
-    public SampleData() {
-      // do nothing
-    }
-
-    public SampleData(String aString, int anInt) {
-      this.aString = aString;
-      this.anInt = anInt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      SampleData that = (SampleData) o;
-
-      if (anInt != that.anInt) return false;
-      return aString != null ? aString.equals(that.aString) : that.aString == null;
-    }
-
-    @Override
-    public int hashCode() {
-      int result = aString != null ? aString.hashCode() : 0;
-      result = 31 * result + anInt;
-      return result;
-    }
+    return fbReferenceUrl + FirebaseDocumentLocation.JSON_SUFFIX;
   }
 }

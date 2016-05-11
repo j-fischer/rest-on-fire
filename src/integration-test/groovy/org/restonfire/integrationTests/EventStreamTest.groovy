@@ -1,8 +1,10 @@
 package org.restonfire.integrationTests
 
 import org.jdeferred.ProgressCallback
+import org.jdeferred.Promise
 import org.restonfire.FirebaseRestEventStream
 import org.restonfire.FirebaseRestNamespace
+import org.restonfire.exceptions.FirebaseRuntimeException
 import org.restonfire.responses.EventStreamResponse
 import spock.util.concurrent.AsyncConditions
 /**
@@ -18,32 +20,36 @@ class EventStreamTest extends AbstractTest {
     namespace = createNamespace()
   }
 
-  def "Get event stream"() {
-    AsyncConditions cond = new AsyncConditions();
+  def "Get event stream - initial event"() {
+    AsyncConditions progressCondition = new AsyncConditions();
+    AsyncConditions finalCondition = new AsyncConditions();
 
     FirebaseRestEventStream<String> eventStream = namespace.getEventStream("testData/text");
-    when: "making starting to listen"
+    when: "starting to listen"
 
     eventStream
       .startListening()
       .progress(new ProgressCallback() {
-      @Override
-      void onProgress(Object progress) {
-        EventStreamResponse event = (EventStreamResponse) progress;
+        @Override
+        void onProgress(Object progress) {
+          EventStreamResponse event = (EventStreamResponse) progress;
 
-        cond.evaluate {
-        assert event.getEventType() == EventStreamResponse.EventType.Set
-        assert event.getEventData() != null
-      }
+          progressCondition.evaluate {
+            assert event.getEventType() == EventStreamResponse.EventType.Set
+            assert event.getSerialzedEventData() != "aString"
+          }
+        }
+      })
+      .always({ Promise.State state, Map<String, Object> val, FirebaseRuntimeException ex ->
+      finalCondition.evaluate {
+        assert ex == null
+        assert val == null
       }
     })
-//      .always({ Promise.State state, Map<String, Object> val, FirebaseRuntimeException ex ->
-//      cond.evaluate {
-//        assert ex == null
-//        assert val == null
-//      }
-//    })
     then: "wait for result evaluation"
-    cond.await(60);
+    progressCondition.await(5);
+
+    eventStream.stopListening()
+    finalCondition.await(5);
   }
 }

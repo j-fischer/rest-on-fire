@@ -1,5 +1,6 @@
 package org.restonfire.exceptions;
 
+import com.ning.http.client.HttpResponseStatus;
 import com.ning.http.client.Response;
 
 import java.io.IOException;
@@ -10,8 +11,14 @@ import java.io.IOException;
  */
 public final class FirebaseAccessException extends FirebaseRuntimeException {
 
+  public static final String ERROR_MESSAGE = "The access to the reference '%s' was not permitted. Status code: %s";
+
   public FirebaseAccessException(Response response)  throws IOException {
-    super(ErrorCode.AccessViolation, String.format("The access to the reference '%s' was not permitted. Status code: %s", response.getUri(), response.getStatusCode()));
+    super(ErrorCode.AccessViolation, String.format(ERROR_MESSAGE, response.getUri(), response.getStatusCode()));
+  }
+
+  public FirebaseAccessException(HttpResponseStatus responseStatus) {
+    super(ErrorCode.AccessViolation, String.format(ERROR_MESSAGE, responseStatus.getUri(), responseStatus.getStatusCode()));
   }
 
   public FirebaseAccessException(String referenceUrl) {

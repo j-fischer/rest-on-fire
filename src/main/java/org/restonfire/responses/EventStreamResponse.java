@@ -1,16 +1,20 @@
 package org.restonfire.responses;
 
-import java.util.Map;
+import com.google.gson.Gson;
 
 /**
  * Created by jfischer on 2016-05-06.
  */
 public class EventStreamResponse {
 
-  private final EventType eventType;
-  private final Map<String, Object> eventData;
+  private final Gson gson;
 
-  public EventStreamResponse(EventType eventType, Map<String, Object> eventData) {
+  private final EventType eventType;
+  private final String eventData;
+
+  public EventStreamResponse(Gson gson, EventType eventType, String eventData) {
+    this.gson = gson;
+
     this.eventType = eventType;
     this.eventData = eventData;
   }
@@ -19,8 +23,14 @@ public class EventStreamResponse {
     return eventType;
   }
 
-  public Map<String, Object> getEventData() {
+  public String getSerialzedEventData() {
     return eventData;
+  }
+
+  public <T> T getEventData(Class<T> clazz) {
+    return eventType == EventStreamResponse.EventType.Set || eventType == EventStreamResponse.EventType.Update
+      ? gson.fromJson(eventData, clazz)
+      : null;
   }
 
   /**
