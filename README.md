@@ -47,14 +47,6 @@ Gradle:
 compile 'org.restonfire:rest-on-fire:0.1.0'
 ```
 
-##### Snapshots
-
-You can use snapshot versions through [JitPack](https://jitpack.io):
-
-* Go to [JitPack project page](https://jitpack.io/#j-fischer/rest-on-fire)
-* Select `Commits` section and click `Get it` on commit you want to use (top one - the most recent)
-* Follow displayed instruction: add repository and change dependency (NOTE: due to JitPack convention artifact group will be different)
-
 ### Usage
 
 Start by creating a factory for FirebaseNamespaces. The factory manages the external
