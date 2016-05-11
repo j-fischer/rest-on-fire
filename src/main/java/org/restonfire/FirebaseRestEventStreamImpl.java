@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by jfischer on 2016-05-05.
+ * {@link FirebaseRestEventStream} implementation.
  */
 class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements FirebaseRestEventStream {
 
