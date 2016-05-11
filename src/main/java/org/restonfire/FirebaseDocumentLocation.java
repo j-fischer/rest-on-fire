@@ -12,7 +12,7 @@ abstract class FirebaseDocumentLocation {
   protected final String fbAccessToken;
   protected final String referenceUrl;
 
-  public FirebaseDocumentLocation(String fbBaseUrl, String path, String fbAccessToken) {
+  FirebaseDocumentLocation(String fbBaseUrl, String path, String fbAccessToken) {
     this.fbBaseUrl = fbBaseUrl;
     this.path = path;
     this.fbAccessToken = fbAccessToken;

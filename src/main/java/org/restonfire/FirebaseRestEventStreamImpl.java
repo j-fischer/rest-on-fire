@@ -22,6 +22,7 @@ import java.util.Map;
 /**
  * {@link FirebaseRestEventStream} implementation.
  */
+@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "checkstyle:classdataabstractioncoupling", "checkstyle:classfanoutcomplexity"})
 class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements FirebaseRestEventStream {
 
   private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestEventStreamImpl.class);
@@ -129,6 +130,7 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
     );
   }
 
+  @SuppressWarnings({"PMD.ExcessiveMethodLength", "checkstyle:anoninnerlength"})
   private AsyncHandler<Void> createAsyncHandler(final Deferred<Void, FirebaseRuntimeException, EventStreamResponse> deferred) {
     return new AsyncHandler<Void>() {
       @Override
@@ -155,6 +157,7 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
             break;
           default:
             deferred.notify(response);
+            break;
         }
 
         return STATE.CONTINUE;
