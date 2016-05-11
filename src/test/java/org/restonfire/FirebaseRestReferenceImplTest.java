@@ -22,6 +22,7 @@ import org.restonfire.testutils.MockObjectHelper;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -168,6 +169,29 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     });
 
     Response response = createResponse(fbReferenceUrl, HttpURLConnection.HTTP_OK, gson.toJson(sampleData));
+
+    capturedCompletionHandler.getValue().onCompleted(response);
+  }
+
+  @Test
+  public void testSetValue_timestamp() throws Exception {
+    expectSetRequest(ServerValues.TIMESTAMP);
+
+    Promise<Map<String, String>, FirebaseRuntimeException, Void> result = ref.setValue(ServerValues.TIMESTAMP);
+
+    result.then(new DoneCallback<Map<String, String>>() {
+      @Override
+      public void onDone(Map<String, String> result) {
+        assertSame(ServerValues.TIMESTAMP, result);
+      }
+    }).fail(new FailCallback<FirebaseRuntimeException>() {
+      @Override
+      public void onFail(FirebaseRuntimeException result) {
+        fail("The promise should not have been rejected");
+      }
+    });
+
+    Response response = createResponse(fbReferenceUrl, HttpURLConnection.HTTP_OK, gson.toJson(ServerValues.TIMESTAMP));
 
     capturedCompletionHandler.getValue().onCompleted(response);
   }

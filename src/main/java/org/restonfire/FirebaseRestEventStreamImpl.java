@@ -28,7 +28,7 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
 
   private static final Map<String, EventStreamResponse.EventType> EVENT_TYPE_MAPPER;
   static {
-    EVENT_TYPE_MAPPER = new HashMap<>();
+    EVENT_TYPE_MAPPER = new HashMap<>(5);
     EVENT_TYPE_MAPPER.put("put", EventStreamResponse.EventType.Set);
     EVENT_TYPE_MAPPER.put("patch", EventStreamResponse.EventType.Update);
     EVENT_TYPE_MAPPER.put("keep-alive", EventStreamResponse.EventType.KeepAlive);
