@@ -3,7 +3,9 @@ package org.restonfire.responses;
 import com.google.gson.Gson;
 
 /**
- * Created by jfischer on 2016-05-06.
+ * Simple Pojo for deseriazation of the Firebase streaming event using REST.
+ * The underlying event data can be retrieved in a serialized or deserialized form,
+ * using the {@link Gson} instance to convert the data string.
  */
 public class EventStreamResponse {
 
@@ -19,10 +21,24 @@ public class EventStreamResponse {
     this.eventData = eventData;
   }
 
+  /**
+   * Returns the {@link EventType} for the individual event. Note that some types have been
+   * renamed to match the corresponding {@link org.restonfire.FirebaseRestReference} interface
+   * better.
+   *
+   * @return enum value for the {@link EventType}
+   *
+   * @see <a href="https://www.firebase.com/docs/rest/api/#section-streaming">REST Streaming Documentation</a> for more information.
+   */
   public EventType getEventType() {
     return eventType;
   }
 
+  /**
+   * Returns the raw string of the data value as it was returned by the REST API.
+   *
+   * @return A String representing the value for this event
+   */
   public String getSerialzedEventData() {
     return eventData;
   }
@@ -36,7 +52,7 @@ public class EventStreamResponse {
   /**
    * Enum describing the different event types to be returned by the Firebase streaming service.
    *
-   * @see <a href="https://www.firebase.com/docs/rest/api/#section-streaming">Streaming from Firebase REST API</a>
+   * @see <a href="https://www.firebase.com/docs/rest/api/#section-streaming">REST Streaming Documentation</a> for more information.
    */
   public enum EventType {
     Set,
