@@ -4,19 +4,20 @@ import com.firebase.security.token.TokenGenerator
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.ning.http.client.AsyncHttpClient
+import com.ning.http.client.AsyncHttpClientConfig
 import org.jdeferred.Promise
 import org.restonfire.BaseFirebaseRestNamespaceFactory
 import org.restonfire.FirebaseRestNamespace
 import org.restonfire.exceptions.FirebaseRuntimeException
 import spock.lang.Specification
 import spock.util.concurrent.AsyncConditions
-
 /**
  * Base class for tests managing Firebase setup and token generation.
  */
 abstract class AbstractTest extends Specification {
 
-  private AsyncHttpClient asyncHttpClient = new AsyncHttpClient()
+  private AsyncHttpClientConfig.Builder builder = new AsyncHttpClientConfig.Builder();
+
   private Gson gson = new GsonBuilder().create()
   private String namespaceUrl = System.getProperty("firebase.namespace") ?: System.getenv("FIREBASE_NAMESPACE")
   private String firebaseSecret = System.getProperty("firebase.secret") ?: System.getenv("FIREBASE_SECRET")
@@ -24,13 +25,19 @@ abstract class AbstractTest extends Specification {
   private String firebaseToken
   private Promise<Map<String, Object>, FirebaseRuntimeException, Void> setupPromise
 
-  private BaseFirebaseRestNamespaceFactory factory = new BaseFirebaseRestNamespaceFactory(
-    asyncHttpClient,
-    gson
-  );
+  private BaseFirebaseRestNamespaceFactory factory
 
   void setup() {
     AsyncConditions cond = new AsyncConditions()
+
+    factory = new BaseFirebaseRestNamespaceFactory(
+      new AsyncHttpClient(builder
+        .setCompressionEnforced(true)
+        .setAllowPoolingConnections(true)
+        .build()
+      ),
+      gson
+    )
 
     setupPromise = factory.create(
         namespaceUrl,
@@ -51,7 +58,7 @@ abstract class AbstractTest extends Specification {
     def tokenGenerator = new TokenGenerator(firebaseSecret)
     firebaseToken = tokenGenerator.createToken(payload)
 
-    cond.await(3)
+    cond.await(10)
   }
 
   FirebaseRestNamespace createNamespace() {

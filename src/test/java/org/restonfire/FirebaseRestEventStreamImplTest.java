@@ -15,8 +15,8 @@ import org.junit.rules.ExpectedException;
 import org.restonfire.exceptions.*;
 import org.restonfire.fakes.FakeResponseHeaders;
 import org.restonfire.fakes.FakeResponseStatus;
-import org.restonfire.responses.EventStreamResponse;
-import org.restonfire.testdata.SampleData;
+import org.restonfire.responses.StreamingEvent;
+import org.restonfire.responses.StreamingEventData;
 import org.restonfire.testutils.AbstractMockTestCase;
 import org.restonfire.testutils.MockObjectHelper;
 
@@ -41,7 +41,6 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
   private final String fbBaseUrl = "https://mynamespace.firebaseio.com";
   private final String path = "foo/bar";
   private final String fbReferenceUrl = fbBaseUrl + PathUtil.FORWARD_SLASH + path;
-  private final SampleData sampleData = new SampleData("foobar", 123);
 
   private final MutableObject<AsyncHandler<Void>> capturedRequestHandler = new MutableObject<>();
 
@@ -86,7 +85,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
     FirebaseRestEventStreamImpl eventStream = createEventStream();
 
     expectListenerStart();
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result = eventStream.startListening();
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result = eventStream.startListening();
 
     expectPromiseUntouched(result);
     capturedRequestHandler.getValue().onHeadersReceived(new FakeResponseHeaders());
@@ -97,7 +96,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
     FirebaseRestEventStreamImpl eventStream = createEventStream();
 
     expectListenerStart();
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result = eventStream.startListening();
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result = eventStream.startListening();
 
     executedFailedRequestTest(result, HttpURLConnection.HTTP_FORBIDDEN, FirebaseAccessException.class, FirebaseRuntimeException.ErrorCode.AccessViolation);
   }
@@ -107,7 +106,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
     FirebaseRestEventStreamImpl eventStream = createEventStream();
 
     expectListenerStart();
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result = eventStream.startListening();
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result = eventStream.startListening();
 
     executedFailedRequestTest(result, HttpURLConnection.HTTP_UNAUTHORIZED, FirebaseAccessException.class, FirebaseRuntimeException.ErrorCode.AccessViolation);
   }
@@ -117,7 +116,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
     FirebaseRestEventStreamImpl eventStream = createEventStream();
 
     expectListenerStart();
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result = eventStream.startListening();
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result = eventStream.startListening();
 
     executedFailedRequestTest(result, HttpURLConnection.HTTP_GATEWAY_TIMEOUT, FirebaseRestException.class, FirebaseRuntimeException.ErrorCode.UnsupportedStatusCode);
   }
@@ -127,7 +126,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
     FirebaseRestEventStreamImpl eventStream = createEventStream();
 
     expectListenerStart();
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result = eventStream.startListening();
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result = eventStream.startListening();
 
     expectPromiseRejection(result, FirebaseRestException.class, FirebaseRuntimeException.ErrorCode.EventStreamRequestFailed);
 
@@ -139,7 +138,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
     FirebaseRestEventStreamImpl eventStream = createEventStream();
 
     expectListenerStart();
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result = eventStream.startListening();
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result = eventStream.startListening();
 
     expectPromiseRejection(result, FirebaseRestException.class, FirebaseRuntimeException.ErrorCode.EventStreamRequestFailed);
 
@@ -151,7 +150,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
     FirebaseRestEventStreamImpl eventStream = createEventStream();
 
     expectListenerStart();
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result = eventStream.startListening();
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result = eventStream.startListening();
 
     expectPromiseRejection(result, FirebaseAccessException.class, FirebaseRuntimeException.ErrorCode.AccessViolation);
 
@@ -163,7 +162,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
     FirebaseRestEventStreamImpl eventStream = createEventStream();
 
     expectListenerStart();
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result = eventStream.startListening();
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result = eventStream.startListening();
 
     expectPromiseRejection(result, FirebaseAuthenticationExpiredException.class, FirebaseRuntimeException.ErrorCode.AuthenticationExpired);
 
@@ -175,7 +174,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
     FirebaseRestEventStreamImpl eventStream = createEventStream();
 
     expectListenerStart();
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result = eventStream.startListening();
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result = eventStream.startListening();
 
     expectPromiseUntouched(result);
 
@@ -213,7 +212,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
   public void testStopListening_success() throws Exception {
     FirebaseRestEventStreamImpl eventStream = createEventStream();
 
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result = executeSuccessfulEventRetrievalTest(eventStream);
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result = executeSuccessfulEventRetrievalTest(eventStream);
 
     result.always(new AlwaysCallback<Void, FirebaseRuntimeException>() {
       @Override
@@ -232,7 +231,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
     capturedRequestHandler.getValue().onCompleted();
   }
 
-  private void expectPromiseUntouched(Promise<Void, FirebaseRuntimeException, EventStreamResponse> result) {
+  private void expectPromiseUntouched(Promise<Void, FirebaseRuntimeException, StreamingEvent> result) {
     result
       .always(new AlwaysCallback<Void, FirebaseRuntimeException>() {
         @Override
@@ -240,35 +239,38 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
           fail("Promise should not have been rejected or resolved.");
         }
       })
-      .progress(new ProgressCallback<EventStreamResponse>() {
+      .progress(new ProgressCallback<StreamingEvent>() {
         @Override
-        public void onProgress(EventStreamResponse progress) {
+        public void onProgress(StreamingEvent progress) {
           fail("No progress should have been reported.");
         }
       });
   }
 
-  private Promise<Void, FirebaseRuntimeException, EventStreamResponse> executeSuccessfulEventRetrievalTest(FirebaseRestEventStreamImpl eventStream) throws Exception {
+  private Promise<Void, FirebaseRuntimeException, StreamingEvent> executeSuccessfulEventRetrievalTest(FirebaseRestEventStreamImpl eventStream) throws Exception {
     expectListenerStart();
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result = eventStream.startListening();
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result = eventStream.startListening();
 
-    final MutableObject expectedValue = new MutableObject(1);
+    final MutableObject expectedValue = new MutableObject(null);
     result
-      .progress(new ProgressCallback<EventStreamResponse>() {
+      .progress(new ProgressCallback<StreamingEvent>() {
         @Override
-        public void onProgress(EventStreamResponse progress) {
-          assertEquals(expectedValue.getValue().toString(), progress.getSerialzedEventData());
-          assertEquals(expectedValue.getValue(), progress.getEventData(expectedValue.getValue().getClass()));
+        public void onProgress(StreamingEvent progress) {
+          StreamingEventData<?> eventData = progress.getEventData();
+          assertEquals("/", eventData.getPath());
+          assertEquals(expectedValue.getValue(), eventData.getData());
         }
       });
 
-    sendEvent("put", "1", false);
+    // EventStreamResponseData.getData() will always deserialize an int as double.
+    expectedValue.setValue(1.0);
+    sendEvent("put", "{path: '/', data: 1}", false);
 
-    expectedValue.setValue(3);
-    sendEvent("put", "3", false);
+    expectedValue.setValue(3.0);
+    sendEvent("put", "{path: '/', data: 3}", false);
 
     expectedValue.setValue(true);
-    sendEvent("patch", "true", false);
+    sendEvent("patch", "{path: '/', data: true}", false);
 
     return result;
   }
@@ -287,7 +289,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
   }
 
   private <TException extends FirebaseRuntimeException> void executedFailedRequestTest(
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result,
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result,
     int statusCode,
     final Class<TException> exoectedExceptionClazz,
     final FirebaseRuntimeException.ErrorCode expectedErrorCode) throws Exception {
@@ -301,7 +303,7 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
   }
 
   private <TException extends FirebaseRuntimeException> void expectPromiseRejection(
-    Promise<Void, FirebaseRuntimeException, EventStreamResponse> result,
+    Promise<Void, FirebaseRuntimeException, StreamingEvent> result,
     final Class<TException> exoectedExceptionClazz,
     final FirebaseRuntimeException.ErrorCode expectedErrorCode) {
 
@@ -312,9 +314,9 @@ public class FirebaseRestEventStreamImplTest extends AbstractMockTestCase {
           fail("The promise should not have been resolved");
         }
       })
-      .progress(new ProgressCallback<EventStreamResponse>() {
+      .progress(new ProgressCallback<StreamingEvent>() {
         @Override
-        public void onProgress(EventStreamResponse progress) {
+        public void onProgress(StreamingEvent progress) {
           fail("The promise should not have been resolved");
         }
       })

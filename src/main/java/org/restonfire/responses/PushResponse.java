@@ -6,7 +6,7 @@ package org.restonfire.responses;
 public final class PushResponse {
   private final String name;
 
-  public PushResponse() {
+  private PushResponse() {
     this("");
   }
 

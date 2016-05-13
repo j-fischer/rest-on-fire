@@ -6,7 +6,7 @@ import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 import org.restonfire.exceptions.*;
-import org.restonfire.responses.EventStreamResponse;
+import org.restonfire.responses.StreamingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,28 +20,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * {@link FirebaseRestEventStream} implementation.
+ * <b>Non-thread safe</b> {@link FirebaseRestEventStream} implementation.
  */
 @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "checkstyle:classdataabstractioncoupling", "checkstyle:classfanoutcomplexity"})
 class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements FirebaseRestEventStream {
 
   private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestEventStreamImpl.class);
 
-  private static final Map<String, EventStreamResponse.EventType> EVENT_TYPE_MAPPER;
+  private static final Map<String, StreamingEvent.EventType> EVENT_TYPE_MAPPER;
   static {
     EVENT_TYPE_MAPPER = new HashMap<>(5);
-    EVENT_TYPE_MAPPER.put("put", EventStreamResponse.EventType.Set);
-    EVENT_TYPE_MAPPER.put("patch", EventStreamResponse.EventType.Update);
-    EVENT_TYPE_MAPPER.put("keep-alive", EventStreamResponse.EventType.KeepAlive);
-    EVENT_TYPE_MAPPER.put("cancel", EventStreamResponse.EventType.Cancel);
-    EVENT_TYPE_MAPPER.put("auth_revoked", EventStreamResponse.EventType.Expired);
+    EVENT_TYPE_MAPPER.put("put", StreamingEvent.EventType.Set);
+    EVENT_TYPE_MAPPER.put("patch", StreamingEvent.EventType.Update);
+    EVENT_TYPE_MAPPER.put("keep-alive", StreamingEvent.EventType.KeepAlive);
+    EVENT_TYPE_MAPPER.put("cancel", StreamingEvent.EventType.Cancel);
+    EVENT_TYPE_MAPPER.put("auth_revoked", StreamingEvent.EventType.Expired);
   }
 
   private final Gson gson;
   private final AsyncHttpClient asyncHttpClient;
   private final AsyncHttpClient.BoundRequestBuilder eventStreamRequest;
 
-  private final Object lock = new Object();
   private ListenableFuture<Void> currentListener;
 
   FirebaseRestEventStreamImpl(
@@ -65,33 +64,28 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
   }
 
   @Override
-  public Promise<Void, FirebaseRuntimeException, EventStreamResponse> startListening() {
+  public Promise<Void, FirebaseRuntimeException, StreamingEvent> startListening() {
     LOG.debug("startListening() invoked for reference {}", referenceUrl);
-    final Deferred<Void, FirebaseRuntimeException, EventStreamResponse> deferred = new DeferredObject<>();
 
-    final AsyncHandler<Void> asyncRequestHandler = createAsyncHandler(deferred);
-
-    synchronized (lock) {
-      if (currentListener != null) {
-        throw new FirebaseInvalidStateException(FirebaseRuntimeException.ErrorCode.EventStreamListenerAlreadyActive, "The EventStream is already running");
-      }
-
-      currentListener = eventStreamRequest.execute(asyncRequestHandler);
+    if (currentListener != null) {
+      throw new FirebaseInvalidStateException(FirebaseRuntimeException.ErrorCode.EventStreamListenerAlreadyActive, "The EventStream is already running");
     }
+
+    final Deferred<Void, FirebaseRuntimeException, StreamingEvent> deferred = new DeferredObject<>();
+    final AsyncHandler<Void> asyncRequestHandler = createAsyncHandler(deferred);
+    currentListener = eventStreamRequest.execute(asyncRequestHandler);
 
     return deferred.promise();
   }
 
   @Override
   public void stopListening() {
-    synchronized (lock) {
-      if (currentListener == null) {
-        throw new FirebaseInvalidStateException(FirebaseRuntimeException.ErrorCode.EventStreamListenerNotActive, "The EventStream is currently not active");
-      }
-
-      currentListener.done();
-      currentListener = null;
+    if (currentListener == null) {
+      throw new FirebaseInvalidStateException(FirebaseRuntimeException.ErrorCode.EventStreamListenerNotActive, "The EventStream is currently not active");
     }
+
+    currentListener.done();
+    currentListener = null;
   }
 
   @Override
@@ -131,7 +125,7 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
   }
 
   @SuppressWarnings({"PMD.ExcessiveMethodLength", "checkstyle:anoninnerlength"})
-  private AsyncHandler<Void> createAsyncHandler(final Deferred<Void, FirebaseRuntimeException, EventStreamResponse> deferred) {
+  private AsyncHandler<Void> createAsyncHandler(final Deferred<Void, FirebaseRuntimeException, StreamingEvent> deferred) {
     return new AsyncHandler<Void>() {
       @Override
       public void onThrowable(Throwable t) {
@@ -144,7 +138,7 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
       public STATE onBodyPartReceived(HttpResponseBodyPart bodyPart) throws Exception {
         LOG.debug("Received event");
 
-        final EventStreamResponse response = parseResponse(bodyPart.getBodyPartBytes());
+        final StreamingEvent response = parseResponse(bodyPart.getBodyPartBytes());
 
         switch (response.getEventType()) {
           case KeepAlive:
@@ -200,19 +194,19 @@ class FirebaseRestEventStreamImpl extends FirebaseDocumentLocation implements Fi
     };
   }
 
-  private EventStreamResponse parseResponse(byte[] response) throws IOException {
+  private StreamingEvent parseResponse(byte[] response) throws IOException {
 
     try (ByteArrayInputStream is = new ByteArrayInputStream(response);
          BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")))) {
 
-      final EventStreamResponse.EventType eventType = getEventType(reader.readLine());
+      final StreamingEvent.EventType eventType = getEventType(reader.readLine());
       final String eventData = getEventData(reader.readLine());
 
-      return new EventStreamResponse(gson, eventType, eventData);
+      return new StreamingEvent(gson, eventType, eventData);
     }
   }
 
-  private EventStreamResponse.EventType getEventType(String eventString) {
+  private StreamingEvent.EventType getEventType(String eventString) {
     LOG.debug("Mapping event type -> " + eventString);
 
     // eventString format -> event: <eventType>
