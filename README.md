@@ -13,10 +13,13 @@ More info to come soon.
 Features:
 * Similar interfaces to the official Firebase APIs (Java/Javascript) for an easier adoption
 * Supports all basic operations: get, set, update, push & remove
+* Supports streaming events through the REST API
 * Supports functional programming style through JDeferred's Promises
+* Uses SLF4J for logging to allow for an easy adoption of the library's logs
 
-This library uses [Ning's AsyncHttpClient](http://www.ning.com/code/2010/03/introducing-nings-asynchronous-http-client-library/)
-and [JDeferred](https://github.com/jdeferred/jdeferred).
+This library uses [Ning's AsyncHttpClient](http://www.ning.com/code/2010/03/introducing-nings-asynchronous-http-client-library/),
+[JDeferred](https://github.com/jdeferred/jdeferred), [Gson](https://github.com/google/gson) and [SLF4J](http://www.slf4j.org/)
+as external dependencies.
 
 Additional information on the AsyncHttpClient can be found [here](https://jfarcand.wordpress.com/2010/12/21/going-asynchronous-using-asynchttpclient-the-basic/).
 
@@ -77,11 +80,36 @@ the value.
       .done(new DoneCallback<String>() {
         @Override
         void onDone(String result) {
-          cond.evaluate {
-            assert result == "aString"
-          }
+          System.out.println(result);
         }
       });
+
+The namespace can also be used to create a FirebaseRestEventStream object, which allows for listening
+for changes to locations within the namespace.
+
+    FirebaseRestEventStream eventStream = namespace.getEventStream("some/location");
+
+The actual events are published through the progress handler of the Promise.
+
+    eventStream
+      .startListening()
+      .progress(new ProgressCallback<StreamingEvent>() {
+        @Override
+        void onProgress(StreamingEvent event) {
+          StreamingEvent.EventType eventType = event.getEventType();
+          StreamingEventData eventData = event.getEventData(); // see override with TypeToke for more options
+
+          String path = eventData.getPath();
+          Object value = eventData.getData(); // the type depends on the value stored at the event location
+      })
+      .always(new AlwaysCallback<Void, FirebaseRuntimeException>() {
+        @Override
+        void onAlways(Promise.State state, Void resolved, FirebaseRuntimeException rejected) {
+          assert state == Primise.State.RESOLVED;
+          assert resolved == null;
+          assert rejected == null;
+        }
+      })
 
 Please take a look at [JDeferred's documentation](https://github.com/jdeferred/jdeferred) for
 more information on the promises and its callback interfaces.
