@@ -3,6 +3,9 @@
 [![Build Status](http://img.shields.io/travis/j-fischer/rest-on-fire.svg?style=flat&branch=master)](https://travis-ci.org/j-fischer/rest-on-fire)
 [![Coverage Status](https://img.shields.io/coveralls/j-fischer/rest-on-fire.svg?style=flat)](https://coveralls.io/r/j-fischer/rest-on-fire?branch=master)
 [![JCenter](https://img.shields.io/bintray/v/j-fischer/maven/rest-on-fire.svg?label=jcenter)](https://bintray.com/j-fischer/maven/rest-on-fire/_latestVersion)
+<!---
+[![Maven Central](https://img.shields.io/maven-central/v/org.jfire/rest-on-fire.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.jfire/rest-on-fire)
+-->
 
 ### About
 
@@ -28,11 +31,7 @@ Additional information on the AsyncHttpClient can be found [here](https://jfarca
 NOTE: The initial release has only been published to JCenter.
 
 Releases are published to [bintray jcenter](https://bintray.com/bintray/jcenter) (package appear immediately after release) 
-and then to maven central (require few days after release to be published). 
-
-<!---
-[![Maven Central](https://img.shields.io/maven-central/v/org.jfire/rest-on-fire.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.jfire/rest-on-fire)
--->
+and then to maven central (require few days after release to be published).
 
 Maven:
 
