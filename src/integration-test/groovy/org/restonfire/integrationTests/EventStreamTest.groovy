@@ -48,10 +48,10 @@ class EventStreamTest extends AbstractTest {
         }
       })
     then: "wait for result evaluation"
-    progressCondition.await(5);
+    progressCondition.await(10);
 
     eventStream.stopListening()
-    finalCondition.await(5);
+    finalCondition.await(10);
   }
 
   def "Event stream - event changing value type"() {
@@ -93,11 +93,11 @@ class EventStreamTest extends AbstractTest {
         }
       })
     then: "wait for result evaluation"
-    progressConditions[0].await(5);
-    progressConditions[1].await(5);
+    progressConditions[0].await(10);
+    progressConditions[1].await(10);
 
     eventStream.stopListening()
-    finalCondition.await(5);
+    finalCondition.await(10);
   }
 
   def "Event stream - event for update of partial value"() {
@@ -141,11 +141,11 @@ class EventStreamTest extends AbstractTest {
         }
       })
     then: "wait for result evaluation"
-    progressConditions[0].await(5);
-    progressConditions[1].await(5);
+    progressConditions[0].await(10);
+    progressConditions[1].await(10);
 
     eventStream.stopListening()
-    finalCondition.await(5);
+    finalCondition.await(10);
   }
 
   def "Event stream - event where child path was set"() {
@@ -189,10 +189,10 @@ class EventStreamTest extends AbstractTest {
         }
       })
     then: "wait for result evaluation"
-    progressConditions[0].await(5);
-    progressConditions[1].await(5);
+    progressConditions[0].await(10);
+    progressConditions[1].await(10);
 
     eventStream.stopListening()
-    finalCondition.await(5);
+    finalCondition.await(10);
   }
 }
