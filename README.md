@@ -31,23 +31,23 @@ Releases are published to [bintray jcenter](https://bintray.com/bintray/jcenter)
 and then to maven central (require few days after release to be published). 
 
 <!---
-[![Maven Central](https://img.shields.io/maven-central/v/org.restonfire/rest-on-fire.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.restonfire/rest-on-fire)
+[![Maven Central](https://img.shields.io/maven-central/v/org.jfire/rest-on-fire.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.jfire/rest-on-fire)
 -->
 
 Maven:
 
 ```xml
 <dependency>
-  <groupId>org.restonfire</groupId>
+  <groupId>org.jfire</groupId>
   <artifactId>rest-on-fire</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
 Gradle:
 
 ```groovy
-compile 'org.restonfire:rest-on-fire:0.1.0'
+compile 'org.jfire:rest-on-fire:0.2.0'
 ```
 
 ### Usage
