@@ -78,16 +78,19 @@ class FirebaseSecurityRulesTest extends AbstractTest {
         assert getVal != null
       }
 
-      getVal.rules.put(FirebaseSecurityRules.READ_KEY, true);
+      def rulesMap = getVal.rules
+      rulesMap[FirebaseSecurityRules.READ_KEY] = true
 
-      LOG.info("New FB rules: " + new Gson().toJson(getVal))
+      def newRules = new FirebaseSecurityRules(rulesMap)
+
+      LOG.info("New FB rulesMap: " + new Gson().toJson(getVal))
       ref
-        .set(getVal)
+        .set(newRules)
         .always({ Promise.State setState, FirebaseSecurityRules setVal, FirebaseRuntimeException setEx ->
 
         conditions[conditionIndex++].evaluate {
           assert setEx == null
-          assert setVal == getVal
+          assert setVal == newRules
         }
 
         namespaceWithToken

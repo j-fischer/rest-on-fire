@@ -1,5 +1,10 @@
 package org.restonfire.responses;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
@@ -12,6 +17,8 @@ import java.util.Map;
  * @see <a href="https://www.firebase.com/docs/security/guide/index.html">Firebase Security Rules</a>
  */
 public class FirebaseSecurityRules {
+
+  private static final Type RULES_TYPE = new TypeToken<Map<String, Object>>() { }.getType();
 
   /**
    * The key to be used for setting write access.
@@ -39,12 +46,16 @@ public class FirebaseSecurityRules {
     this(null);
   }
 
+  private transient final Gson gson = new GsonBuilder()
+    .disableHtmlEscaping()
+    .create();
+
   public FirebaseSecurityRules(Map<String, Object> rules) {
     this.rules = rules;
   }
 
-  //TODO: Make returned rules unmodifiable or a defensive (deep) copy
   public Map<String, Object> getRules() {
-    return rules;
+    //TODO: Review if using gson is the best method for the deep copy
+    return gson.fromJson(gson.toJson(rules), RULES_TYPE);
   }
 }
