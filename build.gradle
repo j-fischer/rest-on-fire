@@ -60,7 +60,7 @@ dependencies {
   integrationTestCompile 'com.firebase:firebase-token-generator:2.0.0'
 }
 
-group = 'org.jfire'
+group = 'com.github.j-fischer'
 description = 'Firebase REST API wrapper for Java'
 
 github {

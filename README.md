@@ -38,7 +38,7 @@ Maven:
 
 ```xml
 <dependency>
-  <groupId>org.jfire</groupId>
+  <groupId>com.github.j-fischer</groupId>
   <artifactId>rest-on-fire</artifactId>
   <version>0.2.0</version>
 </dependency>
@@ -47,7 +47,7 @@ Maven:
 Gradle:
 
 ```groovy
-compile 'org.jfire:rest-on-fire:0.2.0'
+compile 'com.github.j-fischer:rest-on-fire:0.2.0'
 ```
 
 ### Usage
