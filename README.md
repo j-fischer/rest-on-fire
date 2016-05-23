@@ -47,26 +47,26 @@ compile 'com.github.j-fischer:rest-on-fire:0.2.0'
 
 ### Usage
 
-Start by creating a factory for FirebaseNamespaces. The factory manages the external
-dependencies for all namespaces.
+Start by creating a factory for FirebaseDatabases. The factory manages the external
+dependencies for all databases.
 
-    BaseFirebaseRestNamespaceFactory factory = new BaseFirebaseRestNamespaceFactory(
+    BaseFirebaseRestDatabaseFactory factory = new BaseFirebaseRestDatabaseFactory(
       new AsyncHttpClient(),
       new GsonBuilder().create()
     );
 
-Once the factory is created, you can create an instance of a FirebaseRestNamespace.
+Once the factory is created, you can create an instance of a FirebaseRestDatabase.
 
     // Expects that Firebase access rules do not require authentication
-    FirebaseRestNamespace namespace = factory.create(
-      "http://namespace123.firebaseio.com",
+    FirebaseRestDatabase database = factory.create(
+      "http://database123.firebaseio.com",
       null // accessToken
     );
 
-The namespace can be used to create a FirebaseRestReference object, which is similar
+The database can be used to create a FirebaseRestReference object, which is similar
 to [Firebase](https://www.firebase.com/docs/android/api/#firebase_methods) object of the Java APIs.
 
-    FirebaseRestReference ref = namespace.getReference("some/location");
+    FirebaseRestReference ref = database.getReference("some/location");
 
 The reference object can then be used to perform operations like retrieving or setting
 the value.
@@ -79,10 +79,10 @@ the value.
         }
       });
 
-The namespace can also be used to create a FirebaseRestEventStream object, which allows for listening
-for changes to locations within the namespace.
+The database can also be used to create a FirebaseRestEventStream object, which allows for listening
+for changes to locations within the database.
 
-    FirebaseRestEventStream eventStream = namespace.getEventStream("some/location");
+    FirebaseRestEventStream eventStream = database.getEventStream("some/location");
 
 The actual events are published through the progress handler of the Promise.
 
