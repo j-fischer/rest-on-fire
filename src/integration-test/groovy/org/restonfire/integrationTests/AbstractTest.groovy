@@ -6,8 +6,8 @@ import com.google.gson.GsonBuilder
 import com.ning.http.client.AsyncHttpClient
 import com.ning.http.client.AsyncHttpClientConfig
 import org.jdeferred.Promise
-import org.restonfire.BaseFirebaseRestNamespaceFactory
-import org.restonfire.FirebaseRestNamespace
+import org.restonfire.BaseFirebaseRestDatabaseFactory
+import org.restonfire.FirebaseRestDatabase
 import org.restonfire.exceptions.FirebaseRuntimeException
 import spock.lang.Specification
 import spock.util.concurrent.AsyncConditions
@@ -25,12 +25,12 @@ abstract class AbstractTest extends Specification {
   private String firebaseToken
   private Promise<Map<String, Object>, FirebaseRuntimeException, Void> setupPromise
 
-  private BaseFirebaseRestNamespaceFactory factory
+  private BaseFirebaseRestDatabaseFactory factory
 
   void setup() {
     AsyncConditions cond = new AsyncConditions()
 
-    factory = new BaseFirebaseRestNamespaceFactory(
+    factory = new BaseFirebaseRestDatabaseFactory(
       new AsyncHttpClient(builder
         .setCompressionEnforced(true)
         .setAllowPoolingConnections(true)
@@ -61,7 +61,7 @@ abstract class AbstractTest extends Specification {
     cond.await(10)
   }
 
-  FirebaseRestNamespace createNamespace() {
+  FirebaseRestDatabase createNamespace() {
     assert firebaseToken != null
 
     return factory.create(

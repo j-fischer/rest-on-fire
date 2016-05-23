@@ -6,7 +6,7 @@ import org.restonfire.exceptions.FirebaseRuntimeException;
 import org.restonfire.responses.StreamingEvent;
 
 /**
- * A {@link FirebaseRestEventStream} represents a specific location within a Firebase namespace and allows
+ * A {@link FirebaseRestEventStream} represents a specific location within a Firebase database and allows
  * for listening to change events like data being set or updated.<br>
  * <br>
  * This interface is a mixture of Firebase's Java and Javascript API, using similar syntax as the Java (Android)
@@ -25,7 +25,7 @@ public interface FirebaseRestEventStream {
   String getReferenceUrl();
 
   /**
-   * Starts listening for the events on the current document location of this namespace. The first event will occur
+   * Starts listening for the events on the current document location of this database. The first event will occur
    * immediately and contains the current value at the location. Any consecutive events depend on actual modifications
    * applied to the current location or its children.<br>
    * <br>
@@ -53,9 +53,9 @@ public interface FirebaseRestEventStream {
   void stopListening();
 
   /**
-   * Returns the streaming reference for the root of this Firebase namespace.
+   * Returns the streaming reference for the root of this Firebase database.
    *
-   * @return The {@link FirebaseRestEventStream} representing the root of this Firebase namespace.
+   * @return The {@link FirebaseRestEventStream} representing the root of this Firebase database.
    */
   FirebaseRestEventStream getRoot();
 

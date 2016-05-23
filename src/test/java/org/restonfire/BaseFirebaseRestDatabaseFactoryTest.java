@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Test class for BaseFirebaseRestNamespaceFactory.
  */
-public class BaseFirebaseRestNamespaceFactoryTest extends AbstractMockTestCase {
+public class BaseFirebaseRestDatabaseFactoryTest extends AbstractMockTestCase {
 
   private final AsyncHttpClient asyncHttpClient = mock(AsyncHttpClient.class);
 
@@ -21,7 +21,7 @@ public class BaseFirebaseRestNamespaceFactoryTest extends AbstractMockTestCase {
   private final String fbBaseUrl = "https://mynamespace.firebaseio.com";
   private final String fbAccessToken = "someAccessToken";
 
-  private final FirebaseRestNamespaceFactory factory = new BaseFirebaseRestNamespaceFactory(asyncHttpClient, gson);
+  private final FirebaseRestDatabaseFactory factory = new BaseFirebaseRestDatabaseFactory(asyncHttpClient, gson);
 
   @Test
   public void testGetReference_withAccessToken() {
@@ -34,7 +34,7 @@ public class BaseFirebaseRestNamespaceFactoryTest extends AbstractMockTestCase {
   }
 
   private void executeCreateTest(String fbBaseUrl, String fbAccessToken) {
-    FirebaseRestNamespace namespace = factory.create(fbBaseUrl, fbAccessToken);
+    FirebaseRestDatabase namespace = factory.create(fbBaseUrl, fbAccessToken);
 
     FirebaseRestReference result = namespace.getReference(path);
 

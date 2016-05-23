@@ -5,7 +5,7 @@ import org.jdeferred.Promise;
 import org.restonfire.exceptions.FirebaseRuntimeException;
 
 /**
- * A {@link FirebaseRestReference} represents a specific location within a Firebase namespace and allows
+ * A {@link FirebaseRestReference} represents a specific location within a Firebase database and allows
  * for operations to be executed on this location using Firebase's REST API.<br>
  * <br>
  * This interface is a mixture of Firebase's Java and Javascript API, using similar syntax as the Java (Android)
@@ -116,9 +116,9 @@ public interface FirebaseRestReference {
   Promise<FirebaseRestReference, FirebaseRuntimeException, Void> push();
 
   /**
-   * Returns the reference for the root of this Firebase namespace.
+   * Returns the reference for the root of this Firebase database.
    *
-   * @return The {@link FirebaseRestReference} representing the root of this Firebase namespace.
+   * @return The {@link FirebaseRestReference} representing the root of this Firebase database.
    */
   FirebaseRestReference getRoot();
 

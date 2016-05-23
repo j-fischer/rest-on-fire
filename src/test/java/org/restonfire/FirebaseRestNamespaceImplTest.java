@@ -21,7 +21,7 @@ public class FirebaseRestNamespaceImplTest extends AbstractMockTestCase {
   private final String fbBaseUrl = "https://mynamespace.firebaseio.com";
   private final String fbAccessToken = "someAccessToken";
 
-  private final FirebaseRestNamespaceImpl namespace = new FirebaseRestNamespaceImpl(asyncHttpClient, gson, fbBaseUrl, fbAccessToken);
+  private final FirebaseRestDatabaseImpl namespace = new FirebaseRestDatabaseImpl(asyncHttpClient, gson, fbBaseUrl, fbAccessToken);
 
   @Test
   public void testGetReference() {

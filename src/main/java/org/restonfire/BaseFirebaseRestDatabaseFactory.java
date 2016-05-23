@@ -6,13 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * {@link FirebaseRestNamespaceFactory} implementation using {@link AsyncHttpClient} as the HTTP
+ * {@link FirebaseRestDatabaseFactory} implementation using {@link AsyncHttpClient} as the HTTP
  * transport library. This factory also requires the Firebase access token to be provided
  * for the creation.
  */
-public final class BaseFirebaseRestNamespaceFactory implements FirebaseRestNamespaceFactory {
+public final class BaseFirebaseRestDatabaseFactory implements FirebaseRestDatabaseFactory {
 
-  private static final Logger LOG = LoggerFactory.getLogger(BaseFirebaseRestNamespaceFactory.class);
+  private static final Logger LOG = LoggerFactory.getLogger(BaseFirebaseRestDatabaseFactory.class);
 
   private final AsyncHttpClient asyncHttpClient;
   private final Gson gson;
@@ -23,7 +23,7 @@ public final class BaseFirebaseRestNamespaceFactory implements FirebaseRestNames
    * @param asyncHttpClient {@link AsyncHttpClient} instance, which will be used for the HTTP requests.
    * @param gson {@link Gson} instance used for deserialization of all reference responses.
    */
-  public BaseFirebaseRestNamespaceFactory(
+  public BaseFirebaseRestDatabaseFactory(
     AsyncHttpClient asyncHttpClient,
     Gson gson
   ) {
@@ -32,15 +32,15 @@ public final class BaseFirebaseRestNamespaceFactory implements FirebaseRestNames
   }
 
   @Override
-  public FirebaseRestNamespace create(
-    String namespaceUrl,
+  public FirebaseRestDatabase create(
+    String databaseUrl,
     String firebaseAccessToken) {
 
-    LOG.info("Creating FirebaseRestNamespace for url '{}' {} accessToken",
-      namespaceUrl,
+    LOG.info("Creating FirebaseRestDatabase for url '{}' {} accessToken",
+      databaseUrl,
       StringUtil.notNullOrEmpty(firebaseAccessToken) ? "with" : "without"
     );
 
-    return new FirebaseRestNamespaceImpl(asyncHttpClient, gson, namespaceUrl, firebaseAccessToken);
+    return new FirebaseRestDatabaseImpl(asyncHttpClient, gson, databaseUrl, firebaseAccessToken);
   }
 }

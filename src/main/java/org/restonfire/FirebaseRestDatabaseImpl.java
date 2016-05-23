@@ -6,18 +6,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * {@link FirebaseRestNamespace} implementation.
+ * {@link FirebaseRestDatabase} implementation.
  */
-class FirebaseRestNamespaceImpl implements FirebaseRestNamespace {
+class FirebaseRestDatabaseImpl implements FirebaseRestDatabase {
 
-  private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestNamespaceImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestDatabaseImpl.class);
 
   private final AsyncHttpClient asyncHttpClient;
   private final Gson gson;
   private final String namespaceUrl;
   private final String firebaseAccessToken;
 
-  FirebaseRestNamespaceImpl(
+  FirebaseRestDatabaseImpl(
     AsyncHttpClient asyncHttpClient,
     Gson gson,
     String namespaceUrl,

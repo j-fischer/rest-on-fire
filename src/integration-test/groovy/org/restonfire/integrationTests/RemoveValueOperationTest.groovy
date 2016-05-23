@@ -1,7 +1,7 @@
 package org.restonfire.integrationTests
 
 import org.jdeferred.Promise
-import org.restonfire.FirebaseRestNamespace
+import org.restonfire.FirebaseRestDatabase
 import org.restonfire.exceptions.FirebaseAccessException
 import org.restonfire.exceptions.FirebaseRuntimeException
 import spock.util.concurrent.AsyncConditions
@@ -11,7 +11,7 @@ import spock.util.concurrent.AsyncConditions
  */
 class RemoveValueOperationTest extends AbstractTest {
 
-  private FirebaseRestNamespace namespace;
+  private FirebaseRestDatabase namespace;
 
   void setup() {
     // Run this inside the setup to ensure that the setup function in the AbstractTest class is completed before the
