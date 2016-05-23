@@ -3,9 +3,7 @@
 [![Build Status](http://img.shields.io/travis/j-fischer/rest-on-fire.svg?style=flat&branch=master)](https://travis-ci.org/j-fischer/rest-on-fire)
 [![Coverage Status](https://img.shields.io/coveralls/j-fischer/rest-on-fire.svg?style=flat)](https://coveralls.io/r/j-fischer/rest-on-fire?branch=master)
 [![JCenter](https://img.shields.io/bintray/v/j-fischer/maven/rest-on-fire.svg?label=jcenter)](https://bintray.com/j-fischer/maven/rest-on-fire/_latestVersion)
-<!---
-[![Maven Central](https://img.shields.io/maven-central/v/org.jfire/rest-on-fire.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/org.jfire/rest-on-fire)
--->
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.j-fischer/rest-on-fire.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.j-fischer/rest-on-fire)
 
 ### About
 
@@ -27,9 +25,6 @@ as external dependencies.
 Additional information on the AsyncHttpClient can be found [here](https://jfarcand.wordpress.com/2010/12/21/going-asynchronous-using-asynchttpclient-the-basic/).
 
 ### Setup
-
-NOTE: The package is currently only listed on jCenter. The publication on Maven Central is in the progress and this note 
-will be removed once the deployment to Nexus was successful.
 
 Releases are published to [bintray jcenter](https://bintray.com/bintray/jcenter) (package appear immediately after release) 
 and then to maven central (require few days after release to be published).
