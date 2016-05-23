@@ -28,8 +28,8 @@ Additional information on the AsyncHttpClient can be found [here](https://jfarca
 
 ### Setup
 
-NOTE: The packages has NOT be released in any repository yet. It's in the process of being added to
-jCenter and Maven Central. As soon as it is available, I will remove this note here.
+NOTE: The package is currently only listed on jCenter. The publication on Maven Central is in the progress and this note 
+will be removed once the deployment to Nexus was successful.
 
 Releases are published to [bintray jcenter](https://bintray.com/bintray/jcenter) (package appear immediately after release) 
 and then to maven central (require few days after release to be published).
