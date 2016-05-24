@@ -8,7 +8,9 @@ import com.ning.http.client.AsyncHttpClientConfig
 import org.jdeferred.Promise
 import org.restonfire.BaseFirebaseRestDatabaseFactory
 import org.restonfire.FirebaseRestDatabase
+import org.jdeferred.impl.DefaultDeferredManager
 import org.restonfire.exceptions.FirebaseRuntimeException
+import org.restonfire.responses.FirebaseSecurityRules
 import spock.lang.Specification
 import spock.util.concurrent.AsyncConditions
 /**
@@ -39,10 +41,16 @@ abstract class AbstractTest extends Specification {
       gson
     )
 
-    setupPromise = factory.create(
-        namespaceUrl,
-        firebaseSecret
-      )
+    def adminNamespace = factory.create(
+      namespaceUrl,
+      firebaseSecret
+    )
+
+    def securityPromise = adminNamespace
+      .getSecurityRules()
+      .set(getDefaultSecurityRules())
+
+    def dataPromise = adminNamespace
       .getReference("/")
       .setValue(getDefaultDataSet())
       .always({ Promise.State state, Object val, FirebaseRuntimeException ex ->
@@ -50,6 +58,9 @@ abstract class AbstractTest extends Specification {
           assert state == Promise.State.RESOLVED
         }
       })
+
+    setupPromise = new DefaultDeferredManager()
+      .when(securityPromise, dataPromise)
 
     def payload = [
       uid: "1"
@@ -70,6 +81,13 @@ abstract class AbstractTest extends Specification {
     )
   }
 
+  FirebaseRestDatabase createNamespaceWithSecret() {
+    return factory.create(
+      namespaceUrl,
+      firebaseSecret
+    )
+  }
+
   private Map<String, Object> getDefaultDataSet() {
     def defaultData = [
       testData: [
@@ -85,5 +103,29 @@ abstract class AbstractTest extends Specification {
     ]
 
     return defaultData
+  }
+
+  FirebaseSecurityRules getDefaultSecurityRules() {
+    def rulesJson = '''{
+      "rules": {
+        ".read": false,
+        ".write": false,
+        "testData": {
+          ".read": "auth != null",
+          ".write": false,
+          "toBeSet": {
+            ".write": "auth != null"
+          },
+          "toBeRemoved": {
+            ".write": "auth != null"
+          },
+          "toBeUpdated": {
+            ".write": "auth != null"
+          }
+        }
+      }
+    }'''
+
+    return gson.fromJson(rulesJson, FirebaseSecurityRules.class)
   }
 }

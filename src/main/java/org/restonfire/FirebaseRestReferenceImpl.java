@@ -1,22 +1,18 @@
 package org.restonfire;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
-import org.restonfire.exceptions.FirebaseAccessException;
-import org.restonfire.exceptions.FirebaseRestException;
 import org.restonfire.exceptions.FirebaseRuntimeException;
 import org.restonfire.responses.PushResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 
 /**
  * {@link FirebaseRestReference} implementation.
@@ -24,8 +20,6 @@ import java.net.HttpURLConnection;
 final class FirebaseRestReferenceImpl extends FirebaseDocumentLocation implements FirebaseRestReference {
 
   private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestReferenceImpl.class);
-
-  private static final String FAILED_TO_PARSE_RESPONSE_BODY_FOR_REQUEST = "Failed to parse responses body for request: ";
 
   private final Gson gson;
   private final AsyncHttpClient asyncHttpClient;
@@ -211,23 +205,6 @@ final class FirebaseRestReferenceImpl extends FirebaseDocumentLocation implement
   }
 
   private <T> T handleResponse(Response response, Class<T> clazz) {
-    try {
-      switch (response.getStatusCode()) {
-        case HttpURLConnection.HTTP_OK:
-          return clazz == null
-            ? null
-            : gson.fromJson(response.getResponseBody(), clazz);
-        case HttpURLConnection.HTTP_UNAUTHORIZED:
-        case HttpURLConnection.HTTP_FORBIDDEN:
-          LOG.warn("The request to '{}' that violates the Security and Firebase Rules", referenceUrl);
-          throw new FirebaseAccessException(response);
-        default:
-          LOG.error("Unsupported status code: " + response.getStatusCode());
-          throw new FirebaseRestException(FirebaseRuntimeException.ErrorCode.UnsupportedStatusCode, response);
-      }
-    } catch (JsonSyntaxException | IOException e) {
-      LOG.error(FAILED_TO_PARSE_RESPONSE_BODY_FOR_REQUEST + response.getUri(), e);
-      throw new FirebaseRestException(FirebaseRuntimeException.ErrorCode.ResponseDeserializationFailure, FAILED_TO_PARSE_RESPONSE_BODY_FOR_REQUEST + response.getUri(), e);
-    }
+    return RestUtil.handleResponse(gson, referenceUrl, response, clazz);
   }
 }

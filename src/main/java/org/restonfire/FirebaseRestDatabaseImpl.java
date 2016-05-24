@@ -54,4 +54,16 @@ class FirebaseRestDatabaseImpl implements FirebaseRestDatabase {
       path
     );
   }
+
+  @Override
+  public FirebaseSecurityRulesReference getSecurityRules() {
+    LOG.info("Creating new FirebaseSecurityRulesReference");
+
+    // FirebaseSecurityRulesReferenceImpl has its own Gson instance, in order to apply special configuration settings
+    return new FirebaseSecurityRulesReferenceImpl(
+      asyncHttpClient,
+      namespaceUrl,
+      firebaseAccessToken
+    );
+  }
 }
