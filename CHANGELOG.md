@@ -1,5 +1,5 @@
 ### 0.3.0
-* Breaking change: Renamed all references from "namespace" to "database" in order to comply with Firebase's new naming conventions. 
+* Breaking change: Renamed all references from "namespace" to "database" in order to comply with Firebase's new naming conventions 
 
 ### 0.2.0 (2016-05-04)
 * Changed group ID of package to com.github.j-fischer
