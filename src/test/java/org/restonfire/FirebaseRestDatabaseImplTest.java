@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Test class for FirebaseRestNamespaceImpl.
  */
-public class FirebaseRestNamespaceImplTest extends AbstractMockTestCase {
+public class FirebaseRestDatabaseImplTest extends AbstractMockTestCase {
 
   private final AsyncHttpClient asyncHttpClient = mock(AsyncHttpClient.class);
 
