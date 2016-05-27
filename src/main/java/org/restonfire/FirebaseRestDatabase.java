@@ -22,13 +22,8 @@ public interface FirebaseRestDatabase {
    * With this reference object, the consumer can listen to changes for the data at this location, or travers
    * further down or up the tree.
    *
-<<<<<<< HEAD:src/main/java/org/restonfire/FirebaseRestDatabase.java
    * @param path The location within database to create a event stream for.
-   * @return The
-=======
-   * @param path The location within namespace to create a event stream for.
    * @return The {@link FirebaseRestEventStream} for the given path.
->>>>>>> security-rules:src/main/java/org/restonfire/FirebaseRestNamespace.java
    */
   FirebaseRestEventStream getEventStream(String path);
 

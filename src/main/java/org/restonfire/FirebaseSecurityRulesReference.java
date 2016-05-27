@@ -13,7 +13,7 @@ import org.restonfire.responses.FirebaseSecurityRules;
 public interface FirebaseSecurityRulesReference {
 
   /**
-   * Retrieves the rules currently configured for the {@link FirebaseRestNamespace}.
+   * Retrieves the rules currently configured for the {@link FirebaseRestDatabase}.
    *
    * @return The FirebaseSecurityRules
    */
@@ -24,6 +24,8 @@ public interface FirebaseSecurityRulesReference {
    * All previous rules will be replaced in this method.
    *
    * @param newRules The new set of rules that should be applied from now on.
+   *
+   * @return A promise which will resolve with the {@link FirebaseSecurityRules} object passed in as the value if the request was successful.
    */
   Promise<FirebaseSecurityRules, FirebaseRuntimeException, Void> set(FirebaseSecurityRules newRules);
 }
