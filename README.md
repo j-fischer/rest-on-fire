@@ -36,14 +36,14 @@ Maven:
 <dependency>
   <groupId>com.github.j-fischer</groupId>
   <artifactId>rest-on-fire</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
 </dependency>
 ```
 
 Gradle:
 
 ```groovy
-compile 'com.github.j-fischer:rest-on-fire:0.3.0'
+compile 'com.github.j-fischer:rest-on-fire:0.4.0'
 ```
 
 ### Usage
