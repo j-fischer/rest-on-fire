@@ -15,6 +15,7 @@ Features:
 * Similar interfaces to the official Firebase APIs (Java/Javascript) for an easier adoption
 * Supports all basic operations: get, set, update, push & remove
 * Supports streaming events through the REST API
+* Supports retrieving and setting of Firebase security rules 
 * Supports functional programming style through JDeferred's Promises
 * Uses SLF4J for logging to allow for an easy adoption of the library's logs
 
@@ -105,6 +106,31 @@ The actual events are published through the progress handler of the Promise.
           assert rejected == null;
         }
       })
+
+If you want to use this API to retrieve or update the Firebase security rules, use the FirebaseSecurityRulesReference to
+access. However, it's important to note that accessing the security rules requires elevated access privileges,
+such as the Firebase secret.
+
+    FirebaseSecurityRulesReference securityRulesRef = database.getSecurityRules();
+    
+The security rules can now be retrieved, modified and written back to the database. 
+
+    securityRulesRef
+      .get()
+      .done(new DoneCallback<FirebaseSecurityRules>() {
+        @Override
+        void onDone(FirebaseSecurityRules currentRules) {
+          Map<String, Object> rulesMap = currentRules.getRules();
+          
+          // Let's assume that the default read permission is set to false
+          rules.put(".read", true);
+          
+          FirebaseSecurityRules newRules = new FirebaseSecurityRules(rules);
+          
+          // set returns a promise that will resolve after the request succeeded 
+          securityRulesRef.set(newRules);
+        }
+      });
 
 Please take a look at [JDeferred's documentation](https://github.com/jdeferred/jdeferred) for
 more information on the promises and its callback interfaces.
