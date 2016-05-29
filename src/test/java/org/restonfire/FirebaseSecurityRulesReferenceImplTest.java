@@ -24,8 +24,7 @@ import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Unit tests for FirebaseSecurityRulesReferenceImpl.
@@ -37,6 +36,7 @@ public class FirebaseSecurityRulesReferenceImplTest extends AbstractMockTestCase
 
   private final Gson gson = new GsonBuilder().create();
   private final String fbBaseUrl = "https://mynamespace.firebaseio.com";
+  private final FirebaseSecurityRules sampleRules = new FirebaseSecurityRules();
 
   private final MutableObject<AsyncCompletionHandler<Void>> capturedCompletionHandler = new MutableObject<>();
 
@@ -96,6 +96,55 @@ public class FirebaseSecurityRulesReferenceImplTest extends AbstractMockTestCase
     });
 
     Response response = createResponse(getFirebaseRestUrl(), HttpURLConnection.HTTP_OK, gson.toJson(expectedSecurityRules));
+
+    capturedCompletionHandler.getValue().onCompleted(response);
+  }
+
+  @Test
+  public void testSetValue_forbidden() throws Exception {
+    expectSetRequest(sampleRules);
+
+    executedForbiddenRequestTest(ref.set(sampleRules));
+  }
+
+  @Test
+  public void testSetValue_unauthorized() throws Exception {
+    expectSetRequest(sampleRules);
+
+    executedUnauthorizedRequestTest(ref.set(sampleRules));
+  }
+
+  @Test
+  public void testSetValue_unsupportedStatusCode() throws Exception {
+    expectSetRequest(sampleRules);
+    executedRequestWithUnsupportedResponseTest(ref.set(sampleRules), HttpURLConnection.HTTP_GATEWAY_TIMEOUT);
+
+    expectSetRequest(sampleRules);
+    executedRequestWithUnsupportedResponseTest(ref.set(sampleRules), HttpURLConnection.HTTP_INTERNAL_ERROR);
+
+    expectSetRequest(sampleRules);
+    executedRequestWithUnsupportedResponseTest(ref.set(sampleRules), HttpURLConnection.HTTP_NOT_FOUND);
+  }
+
+  @Test
+  public void testSetValue_success() throws Exception {
+    expectSetRequest(sampleRules);
+
+    Promise<FirebaseSecurityRules, FirebaseRuntimeException, Void> result = ref.set(sampleRules);
+
+    result.then(new DoneCallback<FirebaseSecurityRules>() {
+      @Override
+      public void onDone(FirebaseSecurityRules result) {
+        assertSame(sampleRules, result);
+      }
+    }).fail(new FailCallback<FirebaseRuntimeException>() {
+      @Override
+      public void onFail(FirebaseRuntimeException result) {
+        fail("The promise should not have been rejected");
+      }
+    });
+
+    Response response = createResponse(fbBaseUrl, HttpURLConnection.HTTP_OK, gson.toJson(sampleRules));
 
     capturedCompletionHandler.getValue().onCompleted(response);
   }
