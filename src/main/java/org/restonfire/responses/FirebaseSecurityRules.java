@@ -14,7 +14,7 @@ import java.util.Map;
  * <br>
  * This class does also contain constants for common key names such as ".read".
  *
- * @see <a href="https://www.firebase.com/docs/security/guide/index.html">Firebase Security Rules</a>
+ * @see <a href="https://firebase.google.com/docs/reference/security/database/#rule_types">Firebase Security Rules</a>
  */
 public class FirebaseSecurityRules {
 
@@ -54,6 +54,16 @@ public class FirebaseSecurityRules {
     this.rules = rules;
   }
 
+  /**
+   * Returns the representation of the Firebase in form of a map. Each key is either the name of the permission
+   * (.read, .write), the validation rule (.validate), or the name of the property or variables. The value can either
+   * consist of a {@link Boolean} value, a {@link String} of this key's rule definition, or another map representing
+   * the rules of the children of the current node.
+   *
+   * @return A deep map of the firebase rules.
+   *
+   * @see <a href="https://firebase.google.com/docs/reference/security/database/#rule_types">Firebase Database Security Rules for more information</a>
+   */
   public Map<String, Object> getRules() {
     //TODO: Review if using gson is the best method for the deep copy
     return gson.fromJson(gson.toJson(rules), RULES_TYPE);

@@ -29,7 +29,7 @@ public class StreamingEvent {
    *
    * @return enum value for the {@link EventType}
    *
-   * @see <a href="https://www.firebase.com/docs/rest/api/#section-streaming">REST Streaming Documentation for more information.</a>
+   * @see <a href="https://firebase.google.com/docs/reference/rest/database/#section-streaming">REST Streaming Documentation for more information.</a>
    */
   public EventType getEventType() {
     return eventType;

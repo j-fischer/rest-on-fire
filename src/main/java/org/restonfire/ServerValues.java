@@ -12,7 +12,7 @@ public final class ServerValues {
   /**
    * A server timestamp value.
    *
-   * @see <a href="https://www.firebase.com/docs/rest/api/#section-server-values">Firebase REST Server Values Documentation</a>
+   * @see <a href="https://firebase.google.com/docs/reference/rest/database/#section-server-values">Firebase REST Server Values Documentation</a>
    */
   public static final Map<String, String> TIMESTAMP;
 
