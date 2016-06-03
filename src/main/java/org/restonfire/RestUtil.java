@@ -37,7 +37,7 @@ final class RestUtil {
           LOG.warn("The request to '{}' that violates the Security and Firebase Rules", referenceUrl);
           throw new FirebaseAccessException(response);
         default:
-          LOG.error("Unsupported status code ({}), body: ", response.getStatusCode(), response.getResponseBody());
+          LOG.error("Unsupported status code ({}), body: {}", response.getStatusCode(), response.getResponseBody());
           throw new FirebaseRestException(FirebaseRuntimeException.ErrorCode.UnsupportedStatusCode, response);
       }
     } catch (JsonSyntaxException | IOException e) {
