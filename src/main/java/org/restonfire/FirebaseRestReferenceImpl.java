@@ -173,6 +173,15 @@ final class FirebaseRestReferenceImpl extends FirebaseDocumentLocation implement
     );
   }
 
+  @Override
+  public FirebaseRestQuery query() {
+    return new FirebaseRestQueryImpl(
+      gson,
+      RequestBuilderUtil.createGet(asyncHttpClient, referenceUrl, fbAccessToken),
+      referenceUrl
+    );
+  }
+
   private <T> Void handleValueModifiedResponse(Response response, Deferred<T, FirebaseRuntimeException, Void> deferred, T value) {
     try {
       handleResponse(response, null);

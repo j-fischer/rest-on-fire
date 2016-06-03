@@ -39,6 +39,7 @@ public interface FirebaseRestReference {
    * @return A promise which will be resolved with the POJO generated from the response if the request was successful.
    */
   <T> Promise<T, FirebaseRuntimeException, Void> getValue(Class<T> clazz);
+  // TODO: <T> Promise<T, FirebaseRuntimeException, Void> getValue(Class<T> clazz, orderBy);
 
   /**
    * Sets the value in Firebase for this reference URL. This will overwrite all data that is currently stored
@@ -137,6 +138,8 @@ public interface FirebaseRestReference {
    */
   FirebaseRestReference child(String path);
 
-  // TODO: Add query functions limitToFirst, limitToLast, startAt, endAt, equalTo
-  // TODO: Add orderBy
+  //TODO: add JavaDoc
+  FirebaseRestQuery query();
+
+  //TODO: Add support for priorities to getValue/setValue
 }

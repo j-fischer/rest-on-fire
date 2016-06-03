@@ -97,7 +97,12 @@ abstract class AbstractTest extends Specification {
         text: "aString",
         toBeSet: "SET ME",
         toBeRemoved: "DELETE ME",
-        toBeUpdated: [ foo: "bar" ]
+        toBeUpdated: [ foo: "bar" ],
+        sortedStrings: [
+          c: "y",
+          b: "z",
+          a: "x"
+        ]
       ],
       noReadAccess: "BIG SECRET"
     ]
@@ -121,6 +126,9 @@ abstract class AbstractTest extends Specification {
           },
           "toBeUpdated": {
             ".write": "auth != null"
+          },
+          "sortedStrings": {
+            ".indexOn": ".value"
           }
         }
       }

@@ -37,6 +37,7 @@ public abstract class FirebaseRuntimeException extends RuntimeException {
     UnsupportedStatusCode,
     EventStreamListenerAlreadyActive,
     EventStreamListenerNotActive,
+    QueryParamAlreadySet,
     EventStreamRequestFailed
   }
 }
