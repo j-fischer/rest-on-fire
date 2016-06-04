@@ -102,6 +102,18 @@ abstract class AbstractTest extends Specification {
           c: "y",
           b: "z",
           a: "x"
+        ],
+        dinosaurs: [
+          lambeosaurus: [
+            height : 2.1,
+            length : 12.5,
+            weight: 5000
+          ],
+          stegosaurus: [
+            height : 4,
+            length : 9,
+            weight : 2500
+          ]
         ]
       ],
       noReadAccess: "BIG SECRET"
@@ -129,6 +141,9 @@ abstract class AbstractTest extends Specification {
           },
           "sortedStrings": {
             ".indexOn": ".value"
+          },
+          "dinosaurs": {
+            ".indexOn": ["height", "length"]
           }
         }
       }

@@ -26,6 +26,11 @@ class FirebaseRestQueryImpl implements FirebaseRestQuery {
   private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestQueryImpl.class);
 
   private static final String ORDER_BY = "orderBy";
+  private static final String START_AT = "startAt";
+  private static final String END_AT = "endAt";
+  private static final String EQUAL_TO = "equalTo";
+  private static final String LIMIT_FIRST = "limitToFirst";
+  private static final String LIMIT_LAST = "limitToLast";
 
   private final Gson gson;
   private final String referenceUrl;
@@ -37,21 +42,55 @@ class FirebaseRestQueryImpl implements FirebaseRestQuery {
     Gson gson,
     AsyncHttpClient.BoundRequestBuilder requestBuilder,
     String referenceUrl
-    ) {
+  ) {
     this.gson = gson;
     this.queryRequest = requestBuilder;
     this.referenceUrl = referenceUrl;
   }
 
   @Override
+  public FirebaseRestQuery startAt(Object val) {
+    return setParameter(START_AT, val);
+  }
+
+  @Override
+  public FirebaseRestQuery endAt(Object val) {
+    return setParameter(END_AT, val);
+  }
+
+  @Override
+  public FirebaseRestQuery equalTo(Object val) {
+    return setParameter(EQUAL_TO, val);
+  }
+
+  @Override
+  public FirebaseRestQuery limitToFirst(int number) {
+    return setParameter(LIMIT_FIRST, number);
+  }
+
+  @Override
+  public FirebaseRestQuery limitToLast(int number) {
+    return setParameter(LIMIT_LAST, number);
+  }
+
+  @Override
+  public FirebaseRestQuery orderByKey() {
+    return setParameter(ORDER_BY, "$key");
+  }
+
+  @Override
+  public FirebaseRestQuery orderByChild(String name) {
+    return setParameter(ORDER_BY, name);
+  }
+
+  @Override
+  public FirebaseRestQuery orderByPriority() {
+    return setParameter(ORDER_BY, "$priority");
+  }
+
+  @Override
   public FirebaseRestQuery orderByValue() {
-    if (queryParams.containsKey(ORDER_BY)) {
-      throw new FirebaseInvalidStateException(FirebaseRuntimeException.ErrorCode.QueryParamAlreadySet, ORDER_BY + " parameter has already been set");
-    }
-
-    queryParams.put(ORDER_BY, "\"$value\"");
-
-    return this;
+    return setParameter(ORDER_BY, "$value");
   }
 
   @Override
@@ -84,6 +123,16 @@ class FirebaseRestQueryImpl implements FirebaseRestQuery {
     });
 
     return deferred.promise();
+  }
+
+  private FirebaseRestQuery setParameter(String key, Object value) {
+    if (queryParams.containsKey(key)) {
+      throw new FirebaseInvalidStateException(FirebaseRuntimeException.ErrorCode.QueryParamAlreadySet, key + " parameter has already been set");
+    }
+
+    queryParams.put(key, gson.toJson(value));
+
+    return this;
   }
 
   private <T> T handleResponse(Response response, Class<T> clazz) {
