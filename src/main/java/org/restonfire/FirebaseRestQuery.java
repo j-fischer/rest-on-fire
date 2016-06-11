@@ -23,5 +23,6 @@ public interface FirebaseRestQuery {
   FirebaseRestQuery orderByPriority();
   FirebaseRestQuery orderByValue();
 
+  void clear();
   <T> Promise<T, FirebaseRuntimeException, Void> run(Class<T> clazz);
 }

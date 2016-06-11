@@ -94,6 +94,11 @@ class FirebaseRestQueryImpl implements FirebaseRestQuery {
   }
 
   @Override
+  public void clear() {
+    queryParams.clear();
+  }
+
+  @Override
   public <T> Promise<T, FirebaseRuntimeException, Void> run(final Class<T> clazz) {
     LOG.debug("Running query({}) invoked for reference {}. Filters: {}", clazz, referenceUrl, gson.toJson(queryParams));
 
