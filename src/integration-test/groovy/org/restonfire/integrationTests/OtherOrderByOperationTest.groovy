@@ -5,7 +5,7 @@ import org.restonfire.FirebaseRestDatabase
 import org.restonfire.exceptions.FirebaseRuntimeException
 import spock.util.concurrent.AsyncConditions
 /**
- * Created by jfischer on 2016-06-03.
+ * Tests for various queries requireing the order-by clause.
  */
 class OtherOrderByOperationTest extends AbstractTest {
 
