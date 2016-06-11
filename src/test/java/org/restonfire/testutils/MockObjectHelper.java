@@ -1,10 +1,15 @@
 package org.restonfire.testutils;
 
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.core.IsEqual;
 import org.jmock.api.Action;
 import org.jmock.api.Invocation;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -71,6 +76,22 @@ public class MockObjectHelper
   public static <K, V> Action addElementsToMap(Map<K, V> newElements)
   {
     return new AddElementsAction<K, V>(newElements);
+  }
+
+  public static <T> Matcher<List<T>> elementsAreEqual(final List<T> expected) {
+    return new BaseMatcher<List<T>>() {
+      @Override
+      public boolean matches(Object item) {
+        List<T> actual = (List<T>) item;
+
+        return new IsEqual(expected.toArray()).matches(actual.toArray());
+      }
+
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("all elements should be equal to ").appendValue(Arrays.toString(expected.toArray()));
+      }
+    };
   }
 
   private static class CaptureAction<T> implements Action
