@@ -1,10 +1,11 @@
 package org.restonfire.testutils;
 
+import junit.framework.AssertionFailedError;
+import junitx.framework.ListAssert;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.core.IsEqual;
 import org.jmock.api.Action;
 import org.jmock.api.Invocation;
 
@@ -84,7 +85,13 @@ public class MockObjectHelper
       public boolean matches(Object item) {
         List<T> actual = (List<T>) item;
 
-        return new IsEqual(expected.toArray()).matches(actual.toArray());
+        try {
+          ListAssert.assertEquals(expected, actual);
+        }
+        catch (AssertionFailedError e) {
+          return false;
+        }
+        return true;
       }
 
       @Override
