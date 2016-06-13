@@ -162,4 +162,25 @@ class OrderByValueOperationTest extends AbstractTest {
     then: "wait for result evaluation"
     cond.await(3);
   }
+
+  def "Order by value with equal filter"() {
+    AsyncConditions cond = new AsyncConditions();
+
+    when: "querying for records"
+    namespace.getReference("testData/sortedStrings")
+      .query()
+      .orderByValue()
+      .equalTo("y")
+      .run(Map.class)
+      .always({ Promise.State state, Map<String, String> val, FirebaseRuntimeException ex ->
+      cond.evaluate {
+        assert ex == null
+
+        def expectedValuesInOrder = [ "y" ] as Queue
+        val.each{ k, v -> assert v == expectedValuesInOrder.poll() }
+      }
+    })
+    then: "wait for result evaluation"
+    cond.await(3);
+  }
 }
