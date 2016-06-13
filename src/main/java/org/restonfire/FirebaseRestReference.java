@@ -39,7 +39,6 @@ public interface FirebaseRestReference {
    * @return A promise which will be resolved with the POJO generated from the response if the request was successful.
    */
   <T> Promise<T, FirebaseRuntimeException, Void> getValue(Class<T> clazz);
-  // TODO: <T> Promise<T, FirebaseRuntimeException, Void> getValue(Class<T> clazz, orderBy);
 
   /**
    * Sets the value in Firebase for this reference URL. This will overwrite all data that is currently stored
@@ -138,7 +137,20 @@ public interface FirebaseRestReference {
    */
   FirebaseRestReference child(String path);
 
-  //TODO: add JavaDoc
+  /**
+   * Returns a {@link FirebaseRestQuery} object, which can be used to apply a large number of filters when
+   * retrieving values for this location. This is most useful for maps of objects like chat messages, for example.
+   * A query can be used to sort and filter the result set based on Firebase's sorting rules.<br>
+   * <br>
+   * A {@link FirebaseRestQuery} object can be used to make multiple requests, either with the last supplied filters,
+   * or with a new set of filters to be applied after calling the <code>query.clear()</code> function.<br>
+   * <br>
+   * <a href="https://www.firebase.com/docs/rest/guide/retrieving-data.html">Firebase's old documentation</a> is also a
+   * great resource to understand the behaviour of the supported methods.
+   *
+   * @return The {@link FirebaseRestQuery} representing this location.
+   * @see <a href="https://firebase.google.com/docs/database/rest/retrieve-data#section-rest-filtering">Firebase Filtering Data Documentation</a>
+   */
   FirebaseRestQuery query();
 
   //TODO: Add support for priorities to getValue/setValue
