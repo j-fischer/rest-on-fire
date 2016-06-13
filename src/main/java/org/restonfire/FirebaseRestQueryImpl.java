@@ -108,7 +108,8 @@ class FirebaseRestQueryImpl implements FirebaseRestQuery {
       params.add(new Param(entry.getKey(), entry.getValue()));
     }
 
-    queryRequest.addQueryParams(params);
+    if (params.size() > 0)
+      queryRequest.addQueryParams(params);
 
     final Deferred<T, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
 
