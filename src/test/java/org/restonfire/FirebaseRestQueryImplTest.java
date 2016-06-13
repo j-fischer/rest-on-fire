@@ -225,6 +225,30 @@ public class FirebaseRestQueryImplTest extends AbstractMockTestCase {
     executedRequestWithUnsupportedResponseTest(query.run(SampleData.class), HttpURLConnection.HTTP_NOT_FOUND);
   }
 
+  @Test
+  public void testClear() {
+    // This will set the state of the query to contain multiple filters.
+    testFullQuery();
+    assertIsSatisfied();
+
+    //Re-running the query should set the same filters
+    expectRequestexecution(
+      new Param("orderBy", gson.toJson("$value")),
+      new Param("limitToFirst", gson.toJson(10)),
+      new Param("startAt", gson.toJson("bar")),
+      new Param("endAt", gson.toJson("foo"))
+    );
+
+    query.run(String.class);
+    assertIsSatisfied();
+
+    query.clear();
+
+    //No, all filters have been removed.
+    expectGetRequest();
+    query.run(String.class);
+  }
+
   private <TResult> void executedRequestWithUnsupportedResponseTest(Promise<TResult, FirebaseRuntimeException, Void> result, int responseCode) throws Exception {
     executedFailedRequestTest(result, responseCode, FirebaseRestException.class, null, FirebaseRuntimeException.ErrorCode.UnsupportedStatusCode);
   }
