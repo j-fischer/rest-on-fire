@@ -14,6 +14,7 @@ More info to come soon.
 Features:
 * Similar interfaces to the official Firebase APIs (Java/Javascript) for an easier adoption
 * Supports all basic operations: get, set, update, push & remove
+* Supports sorting and filtering of the data
 * Supports streaming events through the REST API
 * Supports retrieving and setting of Firebase security rules 
 * Supports functional programming style through JDeferred's Promises
@@ -24,6 +25,8 @@ This library uses [Ning's AsyncHttpClient](http://www.ning.com/code/2010/03/intr
 as external dependencies.
 
 Additional information on the AsyncHttpClient can be found [here](https://jfarcand.wordpress.com/2010/12/21/going-asynchronous-using-asynchttpclient-the-basic/).
+
+Also, see the [Firebase documentation](https://firebase.google.com/docs/database/rest/retrieve-data) for more information
 
 ### Setup
 
@@ -77,6 +80,26 @@ the value.
         @Override
         void onDone(String result) {
           System.out.println(result);
+        }
+      });
+
+The `FirebaseRestReference` also provides a `query()` function to apply advanced sorting and filtering 
+to the result set. The function returns a `FirebaseRestQuery` object instance that provides a simple 
+interface to define and run the query.
+
+    FirebaseRestQuery query = ref.query();
+    
+Assuming Firebase's dinosaur sample database, a query for all dinausaurs under a specific height would look like the following.
+    
+    query
+      .orderByChild("height")
+      .endAt(2.1)
+      .run(Map.class)
+      .done(new DoneCallback<Map<String, Object>>() {
+        @Override
+        void onDone(Map<String, Object> result) {
+          // Process the result, which is a Map with the dinosaur's name
+          // as the key and a Map<String, Object> of its properties as a value.
         }
       });
 

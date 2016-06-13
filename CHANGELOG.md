@@ -1,3 +1,7 @@
+### 0.5.0
+
+* Added FirebaseRestQuery implementation that allows for sorting and filtering of result sets
+
 ### 0.4.0
 
 * Added FirebaseSecurityRulesReference implementation to support retrieving and setting of the security rules
