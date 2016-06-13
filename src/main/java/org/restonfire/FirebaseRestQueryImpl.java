@@ -36,7 +36,7 @@ class FirebaseRestQueryImpl implements FirebaseRestQuery {
   private final String referenceUrl;
   private final AsyncHttpClient.BoundRequestBuilder queryRequest;
 
-  private final HashMap<String, String> queryParams = new HashMap<>();
+  private final Map<String, String> queryParams = new HashMap<>();
 
   FirebaseRestQueryImpl(
     Gson gson,
@@ -108,8 +108,9 @@ class FirebaseRestQueryImpl implements FirebaseRestQuery {
       params.add(new Param(entry.getKey(), entry.getValue()));
     }
 
-    if (params.size() > 0)
+    if (!params.isEmpty()) {
       queryRequest.addQueryParams(params);
+    }
 
     final Deferred<T, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
 
