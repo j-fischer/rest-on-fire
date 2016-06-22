@@ -9,7 +9,7 @@ import org.restonfire.responses.StreamingEvent
 import org.restonfire.responses.StreamingEvent.EventType
 import spock.util.concurrent.AsyncConditions
 /**
- * Verifies streaming events against from real Firebase namespace.
+ * Verifies streaming events against a real Firebase database.
  */
 class EventStreamTest extends AbstractTest {
 
