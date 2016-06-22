@@ -153,7 +153,40 @@ public interface FirebaseRestReference {
    */
   FirebaseRestQuery query();
 
-  //TODO: Add support for priorities to getValue/setValue
+  /**
+   * Sets the priority in Firebase for this reference URL. Providing a <code>null</code> value is the equivalent of
+   * removing the priority at this location.<br>
+   * <br>
+   * The promise returned will be rejected with the following two exceptions:<br>
+   * <ul>
+   *   <li><b>org.restonfire.exceptions.FirebaseAccessException</b> - A {@link FirebaseRuntimeException} in the case that
+   *        access to the data for this reference was denied.
+   *   </li>
+   *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that an
+   *        unexpected status code was returned.
+   *   </li>
+   * </ul>
+   * @param priority The priority to be assigned to this Firebase reference.
+   * @return A promise which will be resolved with a <code>null</code> value if the request was successful.
+   * @see <a href="https://firebase.google.com/docs/reference/rest/database/#section-priorities">Firebase Priority Documentation</a>
+   */
   Promise<Void, FirebaseRuntimeException, Void> setPriority(double priority);
+
+  /**
+   * Gets the priority from Firebase for this reference URL. If no priority is set at this location,
+   * The returned promise will be resolved with a <code>null</code> value.<br>
+   * <br>
+   * The promise returned will be rejected with the following two exceptions:<br>
+   * <ul>
+   *   <li><b>org.restonfire.exceptions.FirebaseAccessException</b> - A {@link FirebaseRuntimeException} in the case that
+   *        access to the data for this reference was denied.
+   *   </li>
+   *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that an
+   *        unexpected status code was returned.
+   *   </li>
+   * </ul>
+   * @return A promise which will be resolved with the priority value if the request was successful.
+   * @see <a href="https://firebase.google.com/docs/reference/rest/database/#section-priorities">Firebase Priority Documentation</a>
+   */
   Promise<Double, FirebaseRuntimeException, Void> getPriority();
 }
