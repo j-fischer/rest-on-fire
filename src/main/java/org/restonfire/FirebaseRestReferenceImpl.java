@@ -21,6 +21,8 @@ final class FirebaseRestReferenceImpl extends FirebaseDocumentLocation implement
 
   private static final Logger LOG = LoggerFactory.getLogger(FirebaseRestReferenceImpl.class);
 
+  private static final String PRIORITY_PATH = ".priority";
+
   private final Gson gson;
   private final AsyncHttpClient asyncHttpClient;
 
@@ -187,7 +189,7 @@ final class FirebaseRestReferenceImpl extends FirebaseDocumentLocation implement
     LOG.debug("setPriority({}) invoked for reference {}", priority, referenceUrl);
     final Deferred<Void, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
 
-    final String priorityUrl = PathUtil.concatenatePath(getReferenceUrl(), ".priority") + JSON_SUFFIX;
+    final String priorityUrl = PathUtil.concatenatePath(getReferenceUrl(), PRIORITY_PATH) + JSON_SUFFIX;
     final AsyncHttpClient.BoundRequestBuilder putRequest = RequestBuilderUtil.createPut(asyncHttpClient, priorityUrl, fbAccessToken, gson.toJson(priority));
 
     putRequest.execute(new AsyncCompletionHandler<Void>() {
@@ -207,7 +209,7 @@ final class FirebaseRestReferenceImpl extends FirebaseDocumentLocation implement
     LOG.debug("getPriority() invoked for reference {}", referenceUrl);
     final Deferred<Double, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
 
-    final String priorityUrl = PathUtil.concatenatePath(getReferenceUrl(), ".priority") + JSON_SUFFIX;
+    final String priorityUrl = PathUtil.concatenatePath(getReferenceUrl(), PRIORITY_PATH) + JSON_SUFFIX;
     final AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createGet(asyncHttpClient, priorityUrl, fbAccessToken);
 
     getRequest.execute(new AsyncCompletionHandler<Void>() {
