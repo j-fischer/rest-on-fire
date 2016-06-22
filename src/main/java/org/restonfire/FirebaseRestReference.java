@@ -154,4 +154,6 @@ public interface FirebaseRestReference {
   FirebaseRestQuery query();
 
   //TODO: Add support for priorities to getValue/setValue
+  Promise<Void, FirebaseRuntimeException, Void> setPriority(double priority);
+  Promise<Double, FirebaseRuntimeException, Void> getPriority();
 }

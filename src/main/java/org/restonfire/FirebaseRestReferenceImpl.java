@@ -182,6 +182,52 @@ final class FirebaseRestReferenceImpl extends FirebaseDocumentLocation implement
     );
   }
 
+  @Override
+  public Promise<Void, FirebaseRuntimeException, Void> setPriority(final double priority) {
+    LOG.debug("setPriority({}) invoked for reference {}", priority, referenceUrl);
+    final Deferred<Void, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
+
+    final String priorityUrl = PathUtil.concatenatePath(getReferenceUrl(), ".priority") + JSON_SUFFIX;
+    final AsyncHttpClient.BoundRequestBuilder putRequest = RequestBuilderUtil.createPut(asyncHttpClient, priorityUrl, fbAccessToken, gson.toJson(priority));
+
+    putRequest.execute(new AsyncCompletionHandler<Void>() {
+
+      @Override
+      public Void onCompleted(Response response) throws Exception {
+        LOG.debug("Request for setPriority({}) completed for reference {}", priority, referenceUrl);
+        return handleValueModifiedResponse(response, deferred, null);
+      }
+    });
+
+    return deferred.promise();
+  }
+
+  @Override
+  public Promise<Double, FirebaseRuntimeException, Void> getPriority() {
+    LOG.debug("getPriority() invoked for reference {}", referenceUrl);
+    final Deferred<Double, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
+
+    final String priorityUrl = PathUtil.concatenatePath(getReferenceUrl(), ".priority") + JSON_SUFFIX;
+    final AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createGet(asyncHttpClient, priorityUrl, fbAccessToken);
+
+    getRequest.execute(new AsyncCompletionHandler<Void>() {
+
+      @Override
+      public Void onCompleted(Response response) throws Exception {
+        try {
+          LOG.debug("Request for getPriority() completed");
+          final Double result = handleResponse(response, Double.class);
+          deferred.resolve(result);
+        } catch (FirebaseRuntimeException ex) {
+          deferred.reject(ex);
+        }
+        return null;
+      }
+    });
+
+    return deferred.promise();
+  }
+
   private <T> Void handleValueModifiedResponse(Response response, Deferred<T, FirebaseRuntimeException, Void> deferred, T value) {
     try {
       handleResponse(response, null);
