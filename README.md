@@ -14,7 +14,7 @@ More info to come soon.
 Features:
 * Similar interfaces to the official Firebase APIs (Java/Javascript) for an easier adoption
 * Supports all basic operations: get, set, update, push & remove
-* Supports sorting and filtering of the data
+* Supports sorting and filtering of the data, including priorities
 * Supports streaming events through the REST API
 * Supports retrieving and setting of Firebase security rules 
 * Supports functional programming style through JDeferred's Promises
@@ -48,6 +48,8 @@ Gradle:
 ```groovy
 compile 'com.github.j-fischer:rest-on-fire:0.4.0'
 ```
+
+***Please check the badge on the top of this page for the latest release version!!!***
 
 ### Usage
 

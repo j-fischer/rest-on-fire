@@ -1,3 +1,7 @@
+### 0.6.0
+
+* Added support (get, set, remove) for Firebase priorities to the FirebaseRestReference interface
+
 ### 0.5.0
 
 * Added FirebaseRestQuery implementation that allows for sorting and filtering of result sets
