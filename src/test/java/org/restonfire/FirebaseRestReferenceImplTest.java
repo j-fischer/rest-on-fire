@@ -346,6 +346,110 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     capturedCompletionHandler.getValue().onCompleted(response);
   }
 
+  @Test
+  public void testGetPriority_forbidden() throws Exception {
+    expectGetPriorityRequest();
+    executedForbiddenRequestTest(ref.getPriority());
+  }
+
+  @Test
+  public void testGetPriority_unauthorized() throws Exception {
+    expectGetPriorityRequest();
+    executedUnauthorizedRequestTest(ref.getPriority());
+  }
+
+  @Test
+  public void testGetPriority_unsupportedStatusCode() throws Exception {
+    expectGetPriorityRequest();
+    executedRequestWithUnsupportedResponseTest(ref.getPriority(), HttpURLConnection.HTTP_GATEWAY_TIMEOUT);
+
+    expectGetPriorityRequest();
+    executedRequestWithUnsupportedResponseTest(ref.getPriority(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+
+    expectGetPriorityRequest();
+    executedRequestWithUnsupportedResponseTest(ref.getPriority(), HttpURLConnection.HTTP_NOT_FOUND);
+  }
+
+  @Test
+  public void testGetPriority_success() throws Exception {
+    final Double expectedPriority = 2.4;
+
+    expectGetPriorityRequest();
+
+    Promise<Double, FirebaseRuntimeException, Void> result = ref.getPriority();
+
+    result.then(new DoneCallback<Double>() {
+      @Override
+      public void onDone(Double result) {
+        assertEquals(expectedPriority, result);
+      }
+    }).fail(new FailCallback<FirebaseRuntimeException>() {
+      @Override
+      public void onFail(FirebaseRuntimeException result) {
+        fail("The promise should not have been rejected");
+      }
+    });
+
+    Response response = createResponse(fbReferenceUrl, HttpURLConnection.HTTP_OK, gson.toJson(expectedPriority));
+
+    capturedCompletionHandler.getValue().onCompleted(response);
+  }
+
+  @Test
+  public void testSetPriority_forbidden() throws Exception {
+    final Double priority = 1.1;
+    expectSetPriorityRequest(priority);
+
+    executedForbiddenRequestTest(ref.setPriority(priority));
+  }
+
+  @Test
+  public void testSetPriority_unauthorized() throws Exception {
+    final Double priority = 1.1;
+    expectSetPriorityRequest(priority);
+
+    executedUnauthorizedRequestTest(ref.setPriority(priority));
+  }
+
+  @Test
+  public void testSetPriority_unsupportedStatusCode() throws Exception {
+    final Double priority = 1.1;
+
+    expectSetPriorityRequest(priority);
+    executedRequestWithUnsupportedResponseTest(ref.setPriority(priority), HttpURLConnection.HTTP_GATEWAY_TIMEOUT);
+
+    expectSetPriorityRequest(priority);
+    executedRequestWithUnsupportedResponseTest(ref.setPriority(priority), HttpURLConnection.HTTP_INTERNAL_ERROR);
+
+    expectSetPriorityRequest(priority);
+    executedRequestWithUnsupportedResponseTest(ref.setPriority(priority), HttpURLConnection.HTTP_NOT_FOUND);
+  }
+
+  @Test
+  public void testSetPriority_success() throws Exception {
+    final Double priority = 1.3;
+
+    expectSetPriorityRequest(priority);
+
+    Promise<Void, FirebaseRuntimeException, Void> result = ref.setPriority(priority);
+
+    result.then(new DoneCallback<Void>() {
+      @Override
+      public void onDone(Void result) {
+        assertNull(result);
+      }
+    }).fail(new FailCallback<FirebaseRuntimeException>() {
+      @Override
+      public void onFail(FirebaseRuntimeException result) {
+        fail("The promise should not have been rejected");
+      }
+    });
+
+    Response response = createResponse(fbReferenceUrl, HttpURLConnection.HTTP_OK, gson.toJson(priority));
+
+    capturedCompletionHandler.getValue().onCompleted(response);
+  }
+
   private void executeSuccessfulGetValueRequest(FirebaseRestReferenceImpl restReference) throws Exception {
     final SampleData expectedSampleData = new SampleData("aValue", 123);
 
@@ -434,9 +538,24 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     }});
   }
 
+  private <T> void expectSetPriorityRequest(final Double priority) {
+    addExpectations(new Expectations() {{
+      oneOf(asyncHttpClient).preparePut(getPriorityRestUrl()); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).setBody(gson.toJson(priority)); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
+    }});
+  }
+
   private void expectGetRequest() {
     addExpectations(new Expectations() {{
       oneOf(asyncHttpClient).prepareGet(getFirebaseRestUrl()); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
+    }});
+  }
+
+  private void expectGetPriorityRequest() {
+    addExpectations(new Expectations() {{
+      oneOf(asyncHttpClient).prepareGet(getPriorityRestUrl()); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
   }
@@ -450,6 +569,10 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     }});
 
     return response;
+  }
+
+  private String getPriorityRestUrl() {
+    return fbReferenceUrl + "/.priority" + FirebaseDocumentLocation.JSON_SUFFIX;
   }
 
   private String getFirebaseRestUrl() {

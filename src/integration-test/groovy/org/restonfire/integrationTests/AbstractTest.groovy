@@ -103,6 +103,11 @@ abstract class AbstractTest extends Specification {
           b: "z",
           a: "x"
         ],
+        sortedStringsWithPriorities: [
+          c: [ ".value": "y", ".priority": 1.0 ],
+          b: [ ".value": "z", ".priority": 2.0 ],
+          a: [ ".value": "x", ".priority": 3.0 ]
+        ],
         dinosaurs: [
           lambeosaurus: [
             height : 2.1,
@@ -141,6 +146,10 @@ abstract class AbstractTest extends Specification {
           },
           "sortedStrings": {
             ".indexOn": ".value"
+          },
+          "sortedStringsWithPriorities": {
+            ".indexOn": ".value",
+            ".write": "auth != null"
           },
           "dinosaurs": {
             ".indexOn": ["height", "length"]
