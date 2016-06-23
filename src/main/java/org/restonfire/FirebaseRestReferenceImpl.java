@@ -230,6 +230,26 @@ final class FirebaseRestReferenceImpl extends FirebaseDocumentLocation implement
     return deferred.promise();
   }
 
+  @Override
+  public Promise<Void, FirebaseRuntimeException, Void> removePriority() {
+    LOG.debug("removePriority() invoked for reference {}", referenceUrl);
+    final Deferred<Void, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
+
+    final String priorityUrl = PathUtil.concatenatePath(getReferenceUrl(), PRIORITY_PATH) + JSON_SUFFIX;
+    final AsyncHttpClient.BoundRequestBuilder deleteRequest = RequestBuilderUtil.createDelete(asyncHttpClient, priorityUrl, fbAccessToken);
+
+    deleteRequest.execute(new AsyncCompletionHandler<Void>() {
+
+      @Override
+      public Void onCompleted(Response response) throws Exception {
+        LOG.debug("Request for removePriority() completed for reference {}", referenceUrl);
+        return handleValueModifiedResponse(response, deferred, null);
+      }
+    });
+
+    return deferred.promise();
+  }
+
   private <T> Void handleValueModifiedResponse(Response response, Deferred<T, FirebaseRuntimeException, Void> deferred, T value) {
     try {
       handleResponse(response, null);

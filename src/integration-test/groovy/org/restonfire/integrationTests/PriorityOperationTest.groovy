@@ -74,27 +74,27 @@ class PriorityOperationTest extends AbstractTest {
     cond.await(5);
   }
 
-//  def "Remove priority for value"() {
-//    AsyncConditions cond = new AsyncConditions();
-//
-//    when: "making request to set priority"
-//    def ref = namespace.getReference("testData/sortedStringsWithPriorities/b")
-//
-//    ref
-//      .removePriority()
-//      .always({ Promise.State setState, Void val, FirebaseRuntimeException setEx ->
-//      def getValPromise = ref.getPriority()
-//
-//      getValPromise.always { Promise.State getState, Double getResult, FirebaseRuntimeException getEx ->
-//        cond.evaluate {
-//          assert setEx == null
-//
-//          assert getEx == null
-//          assert getResult == 3.0
-//        }
-//      }
-//    })
-//    then: "wait for result evaluation"
-//    cond.await(5);
-//  }
+  def "Remove priority for value"() {
+    AsyncConditions cond = new AsyncConditions();
+
+    when: "making request to set priority"
+    def ref = namespace.getReference("testData/sortedStringsWithPriorities/b")
+
+    ref
+      .removePriority()
+      .always({ Promise.State setState, Void val, FirebaseRuntimeException setEx ->
+      def getValPromise = ref.getPriority()
+
+      getValPromise.always { Promise.State getState, Double getResult, FirebaseRuntimeException getEx ->
+        cond.evaluate {
+          assert setEx == null
+
+          assert getEx == null
+          assert getResult == null
+        }
+      }
+    })
+    then: "wait for result evaluation"
+    cond.await(5);
+  }
 }

@@ -450,6 +450,55 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     capturedCompletionHandler.getValue().onCompleted(response);
   }
 
+  @Test
+  public void testRemovePriority_forbidden() throws Exception {
+    expectRemovePriorityRequest();
+
+    executedForbiddenRequestTest(ref.removePriority());
+  }
+
+  @Test
+  public void testRemovePriority_unauthorized() throws Exception {
+    expectRemovePriorityRequest();
+
+    executedUnauthorizedRequestTest(ref.removePriority());
+  }
+
+  @Test
+  public void testRemovePriority_unsupportedStatusCode() throws Exception {
+    expectRemovePriorityRequest();
+    executedRequestWithUnsupportedResponseTest(ref.removePriority(), HttpURLConnection.HTTP_GATEWAY_TIMEOUT);
+
+    expectRemovePriorityRequest();
+    executedRequestWithUnsupportedResponseTest(ref.removePriority(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+
+    expectRemovePriorityRequest();
+    executedRequestWithUnsupportedResponseTest(ref.removePriority(), HttpURLConnection.HTTP_NOT_FOUND);
+  }
+
+  @Test
+  public void testRemovePriority_success() throws Exception {
+    expectRemovePriorityRequest();
+
+    Promise<Void, FirebaseRuntimeException, Void> result = ref.removePriority();
+
+    result.then(new DoneCallback<Void>() {
+      @Override
+      public void onDone(Void result) {
+        assertNull(result);
+      }
+    }).fail(new FailCallback<FirebaseRuntimeException>() {
+      @Override
+      public void onFail(FirebaseRuntimeException result) {
+        fail("The promise should not have been rejected");
+      }
+    });
+
+    Response response = createResponse(fbReferenceUrl, HttpURLConnection.HTTP_OK, gson.toJson(null));
+
+    capturedCompletionHandler.getValue().onCompleted(response);
+  }
+
   private void executeSuccessfulGetValueRequest(FirebaseRestReferenceImpl restReference) throws Exception {
     final SampleData expectedSampleData = new SampleData("aValue", 123);
 
@@ -518,6 +567,13 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   private void expectRemoveRequest() {
     addExpectations(new Expectations() {{
       oneOf(asyncHttpClient).prepareDelete(getFirebaseRestUrl()); will(returnValue(requestBuilder));
+      oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
+    }});
+  }
+
+  private void expectRemovePriorityRequest() {
+    addExpectations(new Expectations() {{
+      oneOf(asyncHttpClient).prepareDelete(getPriorityRestUrl()); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
     }});
   }

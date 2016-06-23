@@ -80,7 +80,7 @@ public interface FirebaseRestReference {
   <T> Promise updateValue(T value);
 
   /**
-   * Removes the value for this reference URL from Firebase. This is the requivalent to setting the value
+   * Removes the value for this reference URL from Firebase. This is the equivalent to setting the value
    * to <code>null</code>.<br>
    * <br>
    * The promise returned will be rejected with the following two exceptions:<br>
@@ -189,4 +189,21 @@ public interface FirebaseRestReference {
    * @see <a href="https://firebase.google.com/docs/reference/rest/database/#section-priorities">Firebase Priority Documentation</a>
    */
   Promise<Double, FirebaseRuntimeException, Void> getPriority();
+
+  /**
+   * Removes the priority from Firebase for this reference URL.<br>
+   * <br>
+   * The promise returned will be rejected with the following two exceptions:<br>
+   * <ul>
+   *   <li><b>org.restonfire.exceptions.FirebaseAccessException</b> - A {@link FirebaseRuntimeException} in the case that
+   *        access to the data for this reference was denied.
+   *   </li>
+   *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that an
+   *        unexpected status code was returned.
+   *   </li>
+   * </ul>
+   * @return A promise which will be resolved with a <code>null</code> value if the request was successful.
+   * @see <a href="https://firebase.google.com/docs/reference/rest/database/#section-priorities">Firebase Priority Documentation</a>
+   */
+  Promise<Void, FirebaseRuntimeException, Void> removePriority();
 }
