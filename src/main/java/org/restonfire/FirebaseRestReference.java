@@ -40,6 +40,8 @@ public interface FirebaseRestReference {
    */
   <T> Promise<T, FirebaseRuntimeException, Void> getValue(Class<T> clazz);
 
+  // TODO: Add support for the retrieval of shallow value retrievals
+
   /**
    * Sets the value in Firebase for this reference URL. This will overwrite all data that is currently stored
    * under that location. Providing a <code>null</code> value is the equivalent of removing the data at this location.<br>
