@@ -40,14 +40,14 @@ Maven:
 <dependency>
   <groupId>com.github.j-fischer</groupId>
   <artifactId>rest-on-fire</artifactId>
-  <version>0.6.0</version>
+  <version>0.7.0</version>
 </dependency>
 ```
 
 Gradle:
 
 ```groovy
-compile 'com.github.j-fischer:rest-on-fire:0.6.0'
+compile 'com.github.j-fischer:rest-on-fire:0.7.0'
 ```
 
 ***Please check the badge on the top of this page for the latest release version!!!***

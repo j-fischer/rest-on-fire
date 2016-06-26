@@ -1,4 +1,4 @@
-### 0.7.0 
+### 0.7.0 (2016-06-26)
 
 * Added support for retrieving shallow values to FirebaseRestReference interface
 * Upgraded external libraries: Gson (2.7), SLF4J (1.7.21)
