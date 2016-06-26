@@ -16,6 +16,7 @@ Features:
 * Supports all basic operations: get, set, update, push & remove
 * Supports sorting and filtering of the data, including priorities
 * Supports streaming events through the REST API
+* Supports retrieval of shallow values to help work with large data sets
 * Supports retrieving and setting of Firebase security rules 
 * Supports functional programming style through JDeferred's Promises
 * Uses SLF4J for logging to allow for an easy adoption of the library's logs
