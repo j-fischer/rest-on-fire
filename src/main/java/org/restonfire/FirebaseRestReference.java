@@ -40,7 +40,28 @@ public interface FirebaseRestReference {
    */
   <T> Promise<T, FirebaseRuntimeException, Void> getValue(Class<T> clazz);
 
-  // TODO: Add support for the retrieval of shallow value retrievals
+  /**
+   * Retrieves the <b>shallow</b> value for this reference URL from Firebase.
+   * This will limit the depth of the data returned at a location. If the data
+   * at the location is a JSON primitive (string, number or boolean), its value
+   * will simply be returned. If the data snapshot at the location is a JSON object,
+   * the values for each key will be truncated to true, even if the value for this
+   * key is a JSON primitive.<br>
+   * <br>
+   * The promise returned will be rejected with the following two exceptions:<br>
+   * <ul>
+   *   <li><b>org.restonfire.exceptions.FirebaseAccessException</b> - A {@link FirebaseRuntimeException} in the case that
+   *        access to the data for this reference was denied.
+   *   </li>
+   *   <li><b>org.restonfire.exceptions.FirebaseRestException</b> - A {@link FirebaseRuntimeException} in the case that an
+   *        unexpected status code was returned or the deserialization of the response into the type parameter fails.
+   *   </li>
+   * </ul>
+   * @return A promise which will be resolved with the value generated from the response if the request was successful.
+   * The value is either of type String, Integer, Double, Boolean, or Map&lt;String, Object&gt;
+   * @see <a href="https://firebase.google.com/docs/reference/rest/database/#section-param-shallow">Firebase REST Documentation</a>
+   */
+  Promise<Object, FirebaseRuntimeException, Void> getShallowValue();
 
   /**
    * Sets the value in Firebase for this reference URL. This will overwrite all data that is currently stored

@@ -125,6 +125,58 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
   }
 
   @Test
+  public void testGetShallowValue_forbidden() throws Exception {
+    expectGetRequest();
+    expectShallowParam();
+    executedForbiddenRequestTest(ref.getShallowValue());
+  }
+
+  @Test
+  public void testGetShallowValue_unauthorized() throws Exception {
+    expectGetRequest();
+    expectShallowParam();
+    executedUnauthorizedRequestTest(ref.getShallowValue());
+  }
+
+  @Test
+  public void testGetShallowValue_unsupportedStatusCode() throws Exception {
+    expectGetRequest();
+    expectShallowParam();
+    executedRequestWithUnsupportedResponseTest(ref.getShallowValue(), HttpURLConnection.HTTP_GATEWAY_TIMEOUT);
+
+    expectGetRequest();
+    expectShallowParam();
+    executedRequestWithUnsupportedResponseTest(ref.getShallowValue(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+
+    expectGetRequest();
+    expectShallowParam();
+    executedRequestWithUnsupportedResponseTest(ref.getShallowValue(), HttpURLConnection.HTTP_NOT_FOUND);
+  }
+
+  @Test
+  public void testGetShallowValue_success() throws Exception {
+    expectSuccessfulGetShallowValueRequest(ref);
+  }
+
+  @Test
+  public void testGetShallowValue_success_withAccessToken() throws Exception {
+    final String fbAccessToken = "fbAccessToken";
+    final FirebaseRestReferenceImpl refWithToken = new FirebaseRestReferenceImpl(
+      asyncHttpClient,
+      gson,
+      fbBaseUrl,
+      fbAccessToken,
+      path
+    );
+
+    addExpectations(new Expectations() {{
+      oneOf(requestBuilder).addQueryParam("auth", fbAccessToken); will(returnValue(requestBuilder));
+    }});
+
+    expectSuccessfulGetShallowValueRequest(refWithToken);
+  }
+
+  @Test
   public void testSetValue_forbidden() throws Exception {
     expectSetRequest(null);
 
@@ -498,6 +550,30 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
 
     capturedCompletionHandler.getValue().onCompleted(response);
   }
+  private void expectSuccessfulGetShallowValueRequest(FirebaseRestReferenceImpl restReference) throws Exception {
+    final String expectedValue = "some String";
+
+    expectGetRequest();
+    expectShallowParam();
+
+    Promise<Object, FirebaseRuntimeException, Void> result = restReference.getShallowValue();
+
+    result.then(new DoneCallback<Object>() {
+      @Override
+      public void onDone(Object result) {
+        assertEquals(expectedValue, result);
+      }
+    }).fail(new FailCallback<FirebaseRuntimeException>() {
+      @Override
+      public void onFail(FirebaseRuntimeException result) {
+        fail("The promise should not have been rejected");
+      }
+    });
+
+    Response response = createResponse(fbReferenceUrl, HttpURLConnection.HTTP_OK, gson.toJson(expectedValue));
+
+    capturedCompletionHandler.getValue().onCompleted(response);
+  }
 
   private void executeSuccessfulGetValueRequest(FirebaseRestReferenceImpl restReference) throws Exception {
     final SampleData expectedSampleData = new SampleData("aValue", 123);
@@ -613,6 +689,12 @@ public class FirebaseRestReferenceImplTest extends AbstractMockTestCase {
     addExpectations(new Expectations() {{
       oneOf(asyncHttpClient).prepareGet(getPriorityRestUrl()); will(returnValue(requestBuilder));
       oneOf(requestBuilder).execute(with(aNonNull(AsyncCompletionHandler.class))); will(MockObjectHelper.capture(capturedCompletionHandler));
+    }});
+  }
+
+  private void expectShallowParam() {
+    addExpectations(new Expectations() {{
+      oneOf(requestBuilder).addQueryParam("shallow", "true"); will(returnValue(requestBuilder));
     }});
   }
 

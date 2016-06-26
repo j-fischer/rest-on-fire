@@ -65,6 +65,32 @@ final class FirebaseRestReferenceImpl extends FirebaseDocumentLocation implement
   }
 
   @Override
+  public Promise<Object, FirebaseRuntimeException, Void> getShallowValue() {
+    LOG.debug("getShallowValue() invoked for reference {}", referenceUrl);
+    final Deferred<Object, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
+
+    final AsyncHttpClient.BoundRequestBuilder getRequest = RequestBuilderUtil.createGet(asyncHttpClient, referenceUrl, fbAccessToken);
+    getRequest.addQueryParam("shallow", "true");
+
+    getRequest.execute(new AsyncCompletionHandler<Void>() {
+
+      @Override
+      public Void onCompleted(Response response) throws Exception {
+        try {
+          LOG.debug("Request for getShallowValue() completed");
+          final Object result = handleResponse(response, Object.class);
+          deferred.resolve(result);
+        } catch (FirebaseRuntimeException ex) {
+          deferred.reject(ex);
+        }
+        return null;
+      }
+    });
+
+    return deferred.promise();
+  }
+
+  @Override
   public <T> Promise<T, FirebaseRuntimeException, Void> setValue(final T value) {
     LOG.debug("setValue({}) invoked for reference {}", value, referenceUrl);
     final Deferred<T, FirebaseRuntimeException, Void> deferred = new DeferredObject<>();
